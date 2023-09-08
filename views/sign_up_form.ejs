@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/stylesheets/normalize.css" />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <title><%= title %></title>
+  </head>
+  <body class="signUpBodyContainer">
+    <%- include('header') -%>
+    <main class="signUpParentContainer">
+      <% if (typeof messageFailure !== 'undefined' && messageFailure.length > 0)
+      { %>
+      <div class="messageFailure"><%= messageFailure %></div>
+      <% } %>
+      <div class="signUpFormBackground">
+        <h1>Sign Up</h1>
+        <form action="" method="POST">
+          <div class="signUpFormContainer">
+            <div class="labelAndInput">
+              <label for="first_name">First Name</label>
+              <input
+                value="<%= (typeof first_name === 'undefined') ? '' : first_name %>"
+                name="first_name"
+                placeholder="Bob"
+                id="first_name"
+                type="text"
+              />
+              <% if (typeof errors !== 'undefined') { %> <%
+              errors.forEach(function(error) { %> <% if ((typeof error !==
+              'undefined') && error.path === 'first_name') { %>
+              <span class="errorMsg"><%= error.msg %></span>
+              <% } %> <% }); %> <% } %>
+            </div>
+
+            <div class="labelAndInput">
+              <label for="last_name">Last Name</label>
+              <input
+                value="<%= (typeof last_name === 'undefined') ? '' : last_name %>"
+                name="last_name"
+                id="last_name"
+                placeholder="Redmon"
+                type="text"
+                required
+              />
+              <% if (typeof errors !== 'undefined') { %> <%
+              errors.forEach(function(error) { %> <% if ((typeof error !==
+              'undefined') && error.path === 'last_name') { %>
+              <span class="errorMsg"><%= error.msg %></span>
+              <% } %> <% }); %> <% } %>
+            </div>
+
+            <div class="labelAndInput">
+              <label for="email">Email</label>
+              <input
+                value="<%= (typeof email === 'undefined') ? '' : email %>"
+                name="email"
+                id="email"
+                placeholder="username@example.com"
+                type="email"
+                required
+              />
+              <% if (typeof errors !== 'undefined') { %> <%
+              errors.forEach(function(error) { %> <% if ((typeof error !==
+              'undefined') && error.path === 'email') { %>
+              <span class="errorMsg"><%= error.msg %></span>
+              <% } %> <% }); %> <% } %>
+            </div>
+
+            <div class="labelAndInput">
+              <label for="password">Password</label>
+              <input
+                value="<%= (typeof password === 'undefined') ? '' : password %>"
+                id="password"
+                name="password"
+                type="password"
+                required
+              />
+              <% if (typeof errors !== 'undefined') { %> <%
+              errors.forEach(function(error) { %> <% if ((typeof error !==
+              'undefined') && error.path === 'password') { %>
+              <span class="errorMsg"><%= error.msg %></span>
+              <% } %> <% }); %> <% } %>
+            </div>
+
+            <div class="labelAndInput">
+              <label for="confirm_password">Confirm Password</label>
+              <input
+                value="<%= (typeof confirm_password === 'undefined') ? '' : confirm_password %>"
+                name="confirm_password"
+                id="confirm_password"
+                type="password"
+                required
+              />
+              <% if (typeof errors !== 'undefined') { %> <%
+              errors.forEach(function(error) { %> <% if ((typeof error !==
+              'undefined') && error.path === 'confirm_password') { %>
+              <span class="errorMsg"><%= error.msg %></span>
+              <% } %> <% }); %> <% } %>
+            </div>
+
+            <button class="signUpBtn" type="submit">Sign Up</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>

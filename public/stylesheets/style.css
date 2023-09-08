@@ -1,0 +1,681 @@
+body {
+  font:
+    14px "Lucida Grande",
+    Helvetica,
+    Arial,
+    sans-serif;
+}
+
+textarea {
+  resize: none;
+  margin: 0;
+}
+
+.messageFormContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  & input {
+  }
+
+  & input:focus,
+  textarea:focus {
+    border: 1.5px solid black;
+  }
+}
+
+.bodyContainer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.signUpBodyContainer {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.loginBodyContainer {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.messageBodyContainer {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.mainParentContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 14px;
+  align-items: center;
+  flex: 1;
+
+  & p.memberStatus {
+    margin-left: 14px;
+    margin-top: 20px;
+    align-self: flex-start;
+    flex: 0;
+    background-color: lightgrey;
+    border-radius: 24px 24px;
+    padding: 14px;
+    box-shadow: 0px 4px 9px -2px rgba(79, 79, 79, 0.27);
+  }
+
+  & a {
+    align-self: flex-start;
+
+    & button {
+      padding: 14px;
+      color: rgb(78, 78, 78);
+      border: 1px solid rgb(78, 78, 78);
+      border-radius: 10px 10px;
+      font-size: 1rem;
+      border: 1px solid rgb(134, 134, 134);
+      transition: color border 0.1s linear;
+      text-transform: capitalize;
+      white-space: nowrap;
+      margin-left: 12px;
+      margin-top: 12px;
+      max-height: 50px;
+
+      &:hover {
+        color: black;
+        border: 1px solid rgb(0, 0, 0);
+      }
+    }
+  }
+}
+
+.mainContainer {
+  padding: 16px 36px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+
+  & .memberAndWelcomeContainer {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @media screen and (max-width: 844px) {
+    padding: 10px 22px;
+  }
+}
+
+.loginBackgroundContainer {
+  border-radius: 12px 12px;
+
+  background-color: rgb(208, 208, 208);
+  padding: 32px 42px;
+  min-width: 300px;
+  box-shadow: 2px 2px 2px rgba(155, 155, 155, 0.229);
+  & h1 {
+    text-align: center;
+  }
+
+  & .messageFailure {
+    background-color: unset;
+    box-shadow: unset;
+  }
+}
+
+.loginMainContainer {
+  padding: 16px 26px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  flex: 1;
+  margin: 40px 0px;
+  margin-bottom: 60px;
+
+  & .labelAndInput input {
+    width: 100%;
+  }
+}
+
+.createMessageContainer {
+  padding: 16px 26px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  flex: 1;
+  margin: 40px 0px;
+  margin-bottom: 60px;
+
+  & .labelAndInput input,
+  .labelAndInput textarea {
+    width: 100%;
+    background-color: white;
+  }
+}
+
+a {
+}
+
+.labelAndInput {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.labelAndInput:last-of-type {
+  margin-bottom: 10px;
+}
+
+.signUpFormContainer,
+.loginFormContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.loginFormContainer input {
+  background-color: white;
+  padding: 6px;
+}
+
+.loginFormContainer input:focus {
+  border: 1.5px solid black;
+}
+
+.signUpFormContainer input:not([type="checkbox"]) {
+  padding: 6px;
+  border: 1px solid rgb(76, 76, 76);
+  background-color: white;
+  border: 1px solid rgb(182, 182, 182);
+}
+
+.signUpFormContainer input.member_enrollment_input {
+  flex: 2;
+}
+
+.signUpFormContainer input:focus {
+  border: 1.5px solid black;
+}
+
+.signUpFormContainer label::after {
+  content: " (Required)";
+  font-style: italic;
+}
+
+.signUpFormContainer .labelAndInput:last-of-type label::after {
+  content: "";
+  color: "purple";
+}
+
+span.errorMsg {
+  color: rgb(121, 31, 31);
+}
+
+.signUpBtn,
+.loginBtn {
+  padding: 10px;
+  color: rgb(78, 78, 78);
+  border: 1px solid rgb(78, 78, 78);
+  box-shadow: 2px 2px 2px rgba(155, 155, 155, 0.229);
+  border-radius: 10px 10px;
+  transition: color border 0.1s linear;
+
+  & a {
+    color: inherit;
+  }
+}
+
+.signUpBtn {
+  width: 100px;
+  padding: 6px;
+  font-size: 1rem;
+  align-self: center;
+}
+
+.signUpBtn:hover,
+.loginBtn:hover {
+  color: black;
+  border: 1px solid black;
+}
+
+header {
+}
+
+.headerContainer {
+  display: flex;
+  height: 100px;
+  color: white;
+  background-color: rgb(69, 69, 69);
+  align-items: center;
+  justify-content: space-between;
+  text-transform: capitalize;
+  padding: 0px 22px;
+  box-shadow: 2px 4px 2px rgb(115 115 115 / 29%);
+
+  & h2 {
+    font-size: 1.6rem;
+    font-weight: 800;
+
+    & a {
+      color: white;
+      text-decoration: none;
+    }
+  }
+}
+
+.welcomeSection {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  margin-top: 16px;
+
+  & p:not(:first-of-type),
+  p:nth-child(2) {
+    font-size: 1.3rem;
+    text-align: center;
+  }
+
+  & h2 {
+    text-align: center;
+    font-size: 1.5rem;
+  }
+
+  > * {
+    margin: 10px;
+  }
+}
+
+.navLinksContainer {
+  display: flex;
+  gap: 10px;
+  color: black;
+  font-size: 1.1rem;
+  list-style: none;
+  align-items: center;
+
+  & button {
+    padding: 8px;
+    color: rgb(225, 225, 225);
+    border: 1px solid rgb(78, 78, 78);
+    border-radius: 10px 10px;
+    font-size: 1rem;
+    border: 1px solid rgb(134, 134, 134);
+    transition: color border 0.1s linear;
+    text-transform: capitalize;
+    white-space: nowrap;
+  }
+
+  & button:hover {
+    color: white;
+    border: 1px solid white;
+  }
+
+  & a {
+    text-decoration: none;
+    color: black;
+  }
+}
+
+ul.postsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  flex: 1;
+  padding-left: 0px;
+  align-items: center;
+}
+
+.singlePost {
+  border: 1px solid darkgray;
+  padding: 14px 22px;
+  padding-top: 0px;
+  font-size: 1.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: 12px 12px;
+  box-shadow: 5px 5px 9px -2px rgba(79, 79, 79, 0.27);
+  max-width: 1000px;
+  min-width: 500px;
+
+  @media screen and (max-width: 844px) {
+    padding-top: 0px;
+    font-size: 1.5rem;
+    font-size: 1.2rem;
+    width: 320px;
+    min-width: unset;
+  }
+}
+
+.deleteMessageContainer p a {
+  text-decoration: underline;
+  color: black;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.deleteMessageContainer p {
+  margin: 6px 0px;
+  font-size: 1.2rem;
+}
+
+.dateAdded {
+  align-self: flex-end;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.userMessage {
+  text-overflow: ellipsis;
+  margin: 16px 0px;
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: 1.4rem;
+
+  @media screen and (max-width: 844px) {
+    font-size: 1.2rem;
+  }
+}
+
+.dateAndAuthorContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 0px 14px;
+}
+
+.userMessageBubble {
+  border-radius: 32px 32px;
+  background-color: lightgrey;
+  padding: 8px;
+  margin-bottom: 6px;
+  padding-left: 22px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-shadow: 3px 4px 7px -4px rgb(64 64 64 / 50%);
+  max-width: 454px;
+}
+
+.firstLastName {
+  display: flex;
+  gap: 6px;
+
+  & p:last-of-type:after:not(:hover) {
+    content: ".";
+    font-weight: bold;
+  }
+}
+
+.blurredFirstName,
+.blurredLastName,
+.dateAddedBlurred {
+  color: transparent;
+  text-shadow: 0 0 8px #000;
+  position: relative;
+}
+
+.dateAddedBlurred:hover:after {
+  content: "Must be a member";
+  font-size: 1.2rem;
+  position: absolute;
+  color: white;
+  background-color: grey;
+  padding: 6px;
+  border-radius: 8px;
+  width: 180px;
+  right: -20px;
+  top: -35px;
+  text-align: center;
+}
+
+.firstLastNameBlurred {
+  display: flex;
+  gap: 6px;
+  position: relative;
+
+  & p:last-of-type:after:not(:hover) {
+    content: ".";
+    font-weight: bold;
+  }
+}
+
+.firstLastNameBlurred:hover:after {
+  content: "Must be a member";
+  font-size: 1.2rem;
+  position: absolute;
+  color: white;
+  background-color: grey;
+  padding: 6px;
+  border-radius: 8px;
+  width: 170px;
+  right: -35px;
+  top: -10px;
+  text-align: center;
+}
+
+.signUpFormBackground {
+  background-color: rgb(208, 208, 208);
+  border-radius: 12px;
+  padding: 24px 42px;
+  min-width: 300px;
+  box-shadow: 2px 2px 2px rgba(155, 155, 155, 0.229);
+
+  & h1 {
+    text-align: center;
+  }
+}
+
+.createMessageFormBackground {
+  background-color: rgb(208, 208, 208);
+  border-radius: 12px;
+  padding: 24px 42px;
+  min-width: 300px;
+  box-shadow: 2px 2px 2px rgba(155, 155, 155, 0.229);
+
+  & h1 {
+    text-align: center;
+  }
+}
+
+a.createmessage {
+  color: #345764;
+  border-bottom: 3.5px solid #28454f;
+  text-decoration: none;
+  transition: all 0.1s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+a.createmessage:hover {
+  border-bottom: unset;
+  text-decoration: none;
+  color: #28454f;
+}
+
+.signUpParentContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 14px;
+  gap: 14px;
+
+  & .messageFailure {
+    max-width: 300px;
+  }
+}
+
+.memberEnrollmentBackgroundForm {
+  background-color: rgb(208, 208, 208);
+  border-radius: 12px;
+  padding: 24px 42px;
+  min-width: 300px;
+  box-shadow: 2px 2px 2px rgba(155, 155, 155, 0.229);
+
+  & .messageFailure {
+    background-color: inherit;
+    border: 1px solid rgb(76, 76, 76);
+    padding: 10px;
+  }
+}
+
+.messageDeleteBackgroundForm {
+  background-color: rgb(208, 208, 208);
+  border-radius: 12px;
+  padding: 24px 42px;
+  min-width: 300px;
+  display: flex;
+  gap: 12px;
+  flex-direction: column;
+  box-shadow: 2px 2px 2px rgba(155, 155, 155, 0.229);
+
+  & form {
+    display: flex;
+    justify-content: center;
+  }
+
+  & .messageFailure {
+    background-color: inherit;
+    border: 1px solid rgb(76, 76, 76);
+    padding: 10px;
+  }
+}
+
+.messageDeleteBackgroundForm button {
+  padding: 10px;
+  color: rgb(78, 78, 78);
+  border: 1px solid rgb(78, 78, 78);
+  box-shadow: 2px 2px 2px rgba(155, 155, 155, 0.229);
+  border-radius: 10px 10px;
+  transition: color border 0.1s linear;
+  width: 100px;
+  padding: 6px;
+  font-size: 1rem;
+  align-self: center;
+}
+
+.messageDeleteBackgroundForm button:hover {
+  color: black;
+  border: 1px solid rgb(0, 0, 0);
+}
+
+.memberEnrollmentParentContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+
+  & h1 {
+    margin: 22px;
+    font-size: 1.3rem;
+    max-width: 40vw;
+    text-align: center;
+    line-height: 1.7rem;
+  }
+
+  @media screen and (max-width: 840px) {
+    & h1 {
+      max-width: 80vw;
+    }
+  }
+}
+
+.messageDeleteParentContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+
+  & h1 {
+    margin: 22px;
+    font-size: 1.3rem;
+    max-width: 40vw;
+    text-align: center;
+    line-height: 1.7rem;
+  }
+
+  @media screen and (max-width: 840px) {
+    & h1 {
+      max-width: 80vw;
+    }
+  }
+}
+
+.memberEnrollFormContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.messageDeleteFormContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.memberEnrollFormContainer .labelAndInput input {
+  background-color: white;
+}
+
+.admin {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.admin input:first-of-type {
+  appearance: checkbox;
+  height: 25px;
+  width: 30px;
+  padding: 6px;
+}
+
+.signUp {
+  color: #345764;
+  text-decoration: none;
+  transition: all 0.1s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.signUp:hover {
+  border-bottom: 3.5px solid #28454f;
+  color: #28454f;
+}
+
+.joinMembershipBtn {
+  padding: 10px;
+  color: rgb(78, 78, 78);
+  border: 1px solid rgb(78, 78, 78);
+  box-shadow: 2px 2px 2px rgba(155, 155, 155, 0.229);
+  border-radius: 10px 10px;
+  transition: color border 0.1s linear;
+  width: 100px;
+  padding: 6px;
+  font-size: 1rem;
+  align-self: center;
+}
+
+.joinMembershipBtn:hover {
+  color: black;
+  border: 1px solid black;
+}
+
+.messageSuccess,
+.messageFailure {
+  font-size: 1rem;
+  background-color: lightgray;
+  padding: 14px;
+  border-radius: 12px 12px;
+  margin-top: 20px;
+  box-shadow: 2px 2px 2px rgba(155, 155, 155, 0.229);
+}

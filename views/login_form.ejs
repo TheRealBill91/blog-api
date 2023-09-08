@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/stylesheets/normalize.css" />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <title><%= pageTitle %></title>
+  </head>
+  <body class="loginBodyContainer">
+    <%- include('header') -%>
+    <main class="loginMainContainer">
+      <div class="loginBackgroundContainer">
+        <h1><%= title %></h1>
+
+        <form action="" method="POST">
+          <div class="loginFormContainer">
+            <div class="labelAndInput">
+              <label for="email">Email</label>
+              <input
+                value="<%= (typeof email === 'undefined') ? '' : email %>"
+                name="email"
+                placeholder="username@example.com"
+                type="email"
+                required
+              />
+              <% if (typeof errors !== 'undefined') { %> <%
+              errors.forEach(function(error) { %> <% if ((typeof error !==
+              'undefined') && error.path === 'email') { %>
+              <span class="errorMsg"><%= error.msg %></span>
+              <% } %> <% }); %> <% } %>
+            </div>
+
+            <div class="labelAndInput">
+              <label for="password">Password</label>
+              <input
+                value="<%= (typeof password === 'undefined') ? '' : password %>"
+                name="password"
+                id="password"
+                type="password"
+                required
+              />
+              <% if (typeof errors !== 'undefined') { %> <%
+              errors.forEach(function(error) { %> <% if ((typeof error !==
+              'undefined') && error.path === 'password') { %>
+              <span class="errorMsg"><%= error.msg %></span>
+              <% } %> <% }); %> <% } %>
+            </div>
+
+            <button class="signUpBtn" type="submit">Login</button>
+          </div>
+        </form>
+        <% if (typeof messageFailure !== 'undefined' && messageFailure.length) {
+        %>
+        <div class="messageFailure"><%= messageFailure %></div>
+        <% } %>
+      </div>
+    </main>
+  </body>
+</html>
