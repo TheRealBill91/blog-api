@@ -15,6 +15,7 @@ require("dotenv").config();
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const loginOutRouter = require("./routes/loginOut");
+const blogContentRouter = require("./routes/blogContent");
 
 const app = express();
 
@@ -70,7 +71,7 @@ app.use(
     saveUninitialized: false,
     cookie: cookie,
     store: mongoStore,
-  })
+  }),
 );
 
 app.use(flash());
@@ -80,6 +81,7 @@ app.use(adminInViews);
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
+app.use("/", blogContentRouter);
 app.use("/users", usersRouter);
 app.use("/", loginOutRouter);
 

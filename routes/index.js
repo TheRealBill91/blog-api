@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
+const blogContentController = require("../controllers/contentController");
+
 /* GET home page. */
-router.get("/", function (req, res, next) {
-  res.render("index", { title: "Blog Manager" });
-});
+router.get("/", blogContentController.blog_entries);
 
 module.exports = router;
