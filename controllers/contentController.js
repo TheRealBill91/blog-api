@@ -42,7 +42,7 @@ exports.create_blog_post = [
   expressAsyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
 
-    console.log(req.body.publishStatus)
+    console.log(req.body.publishStatus);
 
     const post = new Post({
       title: req.body.title,
@@ -51,7 +51,7 @@ exports.create_blog_post = [
       published: req.body.publishStatus !== undefined ? true : false,
     });
 
-    console.log(post)
+    console.log(post);
 
     if (!errors.isEmpty()) {
       res.render("create_blog_form", {
@@ -127,3 +127,15 @@ exports.blog_edit_post = [
     }
   }),
 ];
+
+// Get's blog entry preview details for client facing side
+exports.client_blog_entries = asyncHandler(async (req, res, next) => {
+  const blogs = await Post.find({}, "title author content")
+    .populate("author")
+    .exec();
+
+  if (blogs.length > 0) {
+    res.status(200).json(blogs);
+  }
+});
+  

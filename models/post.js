@@ -1,14 +1,18 @@
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
+const opts = { toJSON: { virtuals: true } };
 
-const PostSchema = new Schema({
-  title: { type: String, required: true },
-  content: { type: String, required: true },
-  author: { type: Schema.Types.ObjectId, ref: "User" },
-  timestamp: { type: Date, default: Date.now },
-  published: { type: Boolean, default: false },
-});
+const PostSchema = new Schema(
+  {
+    title: { type: String, required: true },
+    content: { type: String, required: true },
+    author: { type: Schema.Types.ObjectId, ref: "User" },
+    timestamp: { type: Date, default: Date.now },
+    published: { type: Boolean, default: false },
+  },
+  opts,
+);
 
 // Virtual for post URL
 PostSchema.virtual("url").get(function () {
