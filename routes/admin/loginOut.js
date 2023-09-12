@@ -1,10 +1,10 @@
 const express = require("express");
-const router = express.Router();
+const loginOutRouter = express.Router();
 const RateLimit = require("express-rate-limit");
 
-const loginOut_controller = require("../controllers/loginOutController");
+const loginOut_controller = require("../../controllers/admin/loginOutController");
 
-router.get("/login", loginOut_controller.login_get);
+loginOutRouter.get("/login", loginOut_controller.login_get);
 
 const userLoginLimiter = RateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
@@ -14,8 +14,8 @@ const userLoginLimiter = RateLimit({
   legacyHeaders: false, // X-RateLimit-* headers
 });
 
-router.post("/login", userLoginLimiter, loginOut_controller.login_post);
+loginOutRouter.post("/login", userLoginLimiter, loginOut_controller.login_post);
 
-router.get("/logout", loginOut_controller.logout_get);
+loginOutRouter.get("/logout", loginOut_controller.logout_get);
 
-module.exports = router;
+module.exports = loginOutRouter;

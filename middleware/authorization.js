@@ -1,14 +1,25 @@
 exports.adminAuthorization = (req, res, next) => {
-  console.log(req.user);
-  console.log(req.isAuthenticated());
   const isAuthenticated = req.user && req.isAuthenticated();
   const isAdmin = isAuthenticated && req.user.admin === true;
 
   if (isAuthenticated && isAdmin) {
     return next();
   } else {
-    req.flash("messageFailure", "Admin access required");
-res.redirect("/login")
-    res.status(403).send("Admin access required");
+    if (req.path.startsWith("/api")) {
+      res.status(403).json({ message: "Admin privileges required" });
+    } else {
+      req.flash("messageFailure", "Admin privileges required");
+      res.redirect("/auth/login");
+    }
+  }
+};
+
+exports.userAuthorization = (req, res, next) => {
+  const isAuthenticated = req.user && req.isAuthenticated();
+
+  if (isAuthenticated && req.user.admin === false) {
+    next();
+  } else {
+    res.status(401).json({ message: "User authentication required" });
   }
 };

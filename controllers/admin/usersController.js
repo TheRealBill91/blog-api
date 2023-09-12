@@ -1,4 +1,4 @@
-const User = require("../models/user");
+const User = require("../../models/user");
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs");
 require("dotenv").config();
@@ -43,6 +43,7 @@ exports.signup_post = [
     .trim()
     .isLength({ min: 5 })
     .withMessage("Password must be at least five charcters")
+    .isStrongPassword()
     .escape(),
   body("confirm_password", "You must confirm your password")
     .trim()
@@ -57,7 +58,6 @@ exports.signup_post = [
 
     // Errors exist in signup inputs
     if (!errors.isEmpty()) {
-      console.log("here? first one");
       res.render("sign_up_form", {
         pageTitle: "Sign Up",
         title: "Sign Up",
@@ -100,6 +100,7 @@ exports.signup_post = [
             if (err) {
               return next(err);
             }
+            // res.status(200).json(user)
             return res.redirect("/");
           });
         }

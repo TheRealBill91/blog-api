@@ -9,20 +9,42 @@
   </head>
   <body>
     <header class="w-full">
-      <div class="headerContainer">
-        <h2><a href="/"> Blog Manager </a></h2>
+      <div
+        class="flex h-[100px] items-center justify-between bg-gray-500 px-6 capitalize text-white shadow-md shadow-gray-600"
+      >
+        <h2 class="text-3xl font-[800]">
+          <a class="text-white no-underline" href="/"> Blog Manager </a>
+        </h2>
         <div>
-          <ul class="navLinksContainer">
-            <a href="/users/sign-up">
-              <li class="flex justify-center items-center"><button class="max-h-[50px]">sign up</button></li>
+          <ul class="flex list-none items-center gap-3 text-lg text-black">
+            <a class="text-black no-underline" href="/users/sign-up">
+              <li class="flex items-center justify-center">
+                <button
+                  class="whitespace-nowrap rounded-lg border-[1px] border-solid border-gray-50 p-2 px-3 text-lg capitalize text-gray-50 transition-all hover:border-gray-200 hover:text-gray-200"
+                >
+                  sign up
+                </button>
+              </li>
             </a>
             <% if ( adminAuth) { %>
-            <a href="/logout">
-              <li><button class="max-h-[50px]">logout</button></li>
+            <a class="text-black no-underline" href="/auth/logout">
+              <li>
+                <button
+                  class="whitespace-nowrap rounded-lg border-[1px] border-solid border-gray-50 p-2 px-3 text-lg capitalize text-gray-50 transition-all hover:border-gray-200 hover:text-gray-200"
+                >
+                  logout
+                </button>
+              </li>
             </a>
             <% } else { %>
-            <a href="/login">
-              <li><button class="max-h-[50px]">login</button></li>
+            <a class="text-black no-underline" href="/auth/login">
+              <li>
+                <button
+                  class="whitespace-nowrap rounded-lg border-[1px] border-solid border-gray-50 p-2 text-lg capitalize text-gray-50 transition-all hover:border-gray-200 hover:text-gray-200"
+                >
+                  login
+                </button>
+              </li>
             </a>
             <% } %>
           </ul>

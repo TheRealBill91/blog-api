@@ -8,16 +8,47 @@ const MongoStore = require("connect-mongo");
 const passport = require("passport");
 const session = require("express-session");
 const cors = require("cors");
+const helmet = require("helmet");
 const adminInViews = require("./middleware/adminInViews");
-const passportConfig = require("./controllers/passportController");
+const passportConfig = require("./controllers/admin/passportController");
 require("dotenv").config();
 
-const indexRouter = require("./routes/index");
-const usersRouter = require("./routes/users");
-const loginOutRouter = require("./routes/loginOut");
-const blogContentRouter = require("./routes/blogContent");
+const adminRouter = require("./routes/admin/adminRouter");
+const clientRouter = require("./routes/client/clientRouter");
 
 const app = express();
+
+if (app.get("env") !== "production") {
+  app.use(helmet());
+} else {
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          // Only allow resources from the same origin to be loaded.
+          defaultSrc: ["'self'"],
+          // Only allow scripts from the same origin and www.billycummings.com.
+          scriptSrc: ["'self'", "'www.billycummings.com'"],
+          // Allow styles from the same origin and inline styles.
+          styleSrc: ["'self'", "'unsafe-inline'"],
+          // Only allow images from the same origin and data URIs.
+          imgSrc: ["'self'", "data:"],
+          // Only allow connections to the same origin and www.billycummings.com.
+          connectSrc: ["'self'", "'www.billycummings.com'"],
+          // Don't allow the page to be embedded in an iframe (clickjacking protection).
+          frameAncestors: ["'none'"],
+        },
+      },
+      // Don't send a Referer header.
+      referrerPolicy: { policy: "no-referrer" },
+    }),
+  );
+}
+
+const corsConfig = {
+  origin: "http://localhost:*",
+  optionsSuccessStatus: 200,
+};
 
 const cookie = {
   httpOnly: true,
@@ -30,7 +61,9 @@ const crypto = {
 
 if (app.get("env") === "production") {
   app.set("trust proxy", 1);
-  (cookie.secure = true), (crypto.secret = process.env.CRYPTO_SECRET);
+  (cookie.secure = true),
+    (crypto.secret = process.env.CRYPTO_SECRET),
+    (corsConfig.origin = "https://www.billycummings.com");
 }
 
 // Set up mongoose connection
@@ -59,7 +92,7 @@ app.set("view engine", "ejs");
 
 app.use(logger("dev"));
 // Need to configure cors further
-app.use(cors());
+// app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -76,14 +109,14 @@ app.use(
 
 app.use(flash());
 passportConfig.passportInitialization(app);
+
 app.use(adminInViews);
 
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", indexRouter);
-app.use("/", blogContentRouter);
-app.use("/users", usersRouter);
-app.use("/", loginOutRouter);
+app.use("/", adminRouter);
+
+app.use("/client", cors(corsConfig), clientRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -1,7 +1,7 @@
-const User = require("../models/user");
+const User = require("../../models/user");
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs");
-const Post = require("../models/post");
+const Post = require("../../models/post");
 
 require("dotenv").config();
 const { body, validationResult } = require("express-validator");
@@ -42,16 +42,12 @@ exports.create_blog_post = [
   expressAsyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
 
-    console.log(req.body.publishStatus);
-
     const post = new Post({
       title: req.body.title,
       content: req.body.content,
       author: req.user.id,
       published: req.body.publishStatus !== undefined ? true : false,
     });
-
-    console.log(post);
 
     if (!errors.isEmpty()) {
       res.render("create_blog_form", {
@@ -107,8 +103,6 @@ exports.blog_edit_post = [
       id: req.params.id,
     });
 
-    console.log(post);
-
     if (!errors.isEmpty()) {
       res.render("edit_blog_form", {
         pageTitle: "Edit Blog",
@@ -136,6 +130,7 @@ exports.client_blog_entries = asyncHandler(async (req, res, next) => {
 
   if (blogs.length > 0) {
     res.status(200).json(blogs);
+  } else {
+    res.status()
   }
 });
-  
