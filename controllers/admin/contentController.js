@@ -6,6 +6,7 @@ const Post = require("../../models/post");
 require("dotenv").config();
 const { body, validationResult } = require("express-validator");
 const expressAsyncHandler = require("express-async-handler");
+const { DateTime } = require("luxon");
 
 // Retrieve blog entries for admin backend
 exports.blog_entries = asyncHandler(async (req, res, next) => {
@@ -46,6 +47,7 @@ exports.create_blog_post = [
       title: req.body.title,
       content: req.body.content,
       author: req.user.id,
+      timestamp: DateTime.now().toISO(),
       published: req.body.publishStatus !== undefined ? true : false,
     });
 
@@ -121,16 +123,3 @@ exports.blog_edit_post = [
     }
   }),
 ];
-
-// Get's blog entry preview details for client facing side
-exports.client_blog_entries = asyncHandler(async (req, res, next) => {
-  const blogs = await Post.find({}, "title author content")
-    .populate("author")
-    .exec();
-
-  if (blogs.length > 0) {
-    res.status(200).json(blogs);
-  } else {
-    res.status()
-  }
-});

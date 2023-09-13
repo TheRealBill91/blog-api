@@ -5,9 +5,9 @@ const authorization = require("../../middleware/authorization");
 
 const contentController = require("../../controllers/admin/contentController");
 
-blogContentRouter.post("/post/:id/edit", contentController.blog_edit_post);
+blogContentRouter.post("/post/:id/revision", contentController.blog_edit_post);
 
-blogContentRouter.get("/post/:id/edit", contentController.blog_edit_get);
+blogContentRouter.get("/post/:id/revision", contentController.blog_edit_get);
 
 
 
@@ -17,8 +17,8 @@ blogContentRouter.get(
   contentController.blog_entries,
 );
 
-blogContentRouter.get("/blogentry", contentController.create_blog_get);
+blogContentRouter.get("/blogcreation", contentController.create_blog_get);
 
-blogContentRouter.post("/blogEntry", contentController.create_blog_post);
+blogContentRouter.post("/blogsubmission", contentController.create_blog_post);
 
 module.exports = blogContentRouter;

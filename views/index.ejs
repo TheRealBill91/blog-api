@@ -43,7 +43,7 @@
           >
             <%= blog.content %>
           </p>
-          <div class="flex justify-between">
+          <div class="flex justify-between rounded-md bg-gray-100 shadow-sm shadow-gray-100   border-solid border-gray-600 border-[1px] p-2">
             <% if (blog.published !== false) {%>
             <a class="rounded-lg p-2 text-sm underline"> Published </a>
             <% } else { %>
@@ -51,13 +51,13 @@
             <% } %>
             <div class="flex items-center gap-2">
               <a
-                href="<%=blog.url+'/edit' %>"
+                href="<%=blog.url+'/revision' %>"
                 class="hover:border-gray-70 rounded-lg border-2 border-gray-600 p-2 text-sm hover:border-gray-800 hover:text-gray-800"
               >
                 <button>Edit</button>
               </a>
               <a
-                href="<%=blog.url+'/delete' %>"
+                href="<%=blog.url+'/deletion' %>"
                 class="rounded-lg border-2 border-gray-600 p-2 text-sm hover:border-gray-800 hover:text-gray-800"
               >
                 <button>Delete</button>

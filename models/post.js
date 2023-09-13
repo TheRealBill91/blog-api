@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { DateTime } = require("luxon");
 
 const Schema = mongoose.Schema;
 const opts = { toJSON: { virtuals: true } };
@@ -13,6 +14,15 @@ const PostSchema = new Schema(
   },
   opts,
 );
+
+// Virtual for formatted date/time post creation
+PostSchema.virtual("formatted_date_stamp").get(function () {
+  const formattedDate = DateTime.fromJSDate(this.timestamp, {
+    zone: "utc",
+  }).toLocaleString(DateTime.DATE_MED);
+
+  return formattedDate;
+});
 
 // Virtual for post URL
 PostSchema.virtual("url").get(function () {
