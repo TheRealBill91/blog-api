@@ -2,7 +2,7 @@ const express = require("express");
 const blogContentRouter = express.Router();
 
 const blogContentController = require("../../controllers/client/contentController");
-const authorization = require("../../middleware/authorization");
+const authorization = require("../../middleware/auth/authorization");
 
 // copy this into client blogContent route
 blogContentRouter.get(
@@ -27,6 +27,12 @@ blogContentRouter.get(
   "/:postId/blog_comments",
   authorization.userAuthorization,
   blogContentController.blog_comments,
+);
+
+blogContentRouter.post(
+  "/:commentId/comment_upvote",
+  authorization.userAuthorization,
+  blogContentController.comment_upvote,
 );
 
 module.exports = blogContentRouter;

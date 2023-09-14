@@ -100,7 +100,6 @@ exports.signup_post = [
             if (err) {
               return next(err);
             }
-            // res.status(200).json(user)
             return res.redirect("/");
           });
         }

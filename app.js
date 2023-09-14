@@ -9,8 +9,8 @@ const passport = require("passport");
 const session = require("express-session");
 const cors = require("cors");
 const helmet = require("helmet");
-const adminInViews = require("./middleware/adminInViews");
-const passportConfig = require("./controllers/admin/passportController");
+const adminInViews = require("./middleware/auth/adminInViews");
+const passportMiddleware = require("./middleware/auth/passportConfig");
 require("dotenv").config();
 
 const adminRouter = require("./routes/admin/adminRouter");
@@ -108,7 +108,7 @@ app.use(
 );
 
 app.use(flash());
-passportConfig.passportInitialization(app);
+passportMiddleware.passportInitialization(app);
 
 app.use(adminInViews);
 

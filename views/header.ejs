@@ -4,23 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/stylesheets/tailwindpresets.css" />
-    <link rel="stylesheet" href="/stylesheets/style.css" />
     <title>Members Only</title>
   </head>
   <body>
     <header class="w-full">
       <div
-        class="flex h-[100px] items-center justify-between bg-gray-500 px-6 capitalize text-white shadow-md shadow-gray-600"
+        class="flex h-[100px] items-center justify-between bg-gray-600 px-6 capitalize text-white shadow-md shadow-gray-600"
       >
         <h2 class="text-3xl font-[800]">
-          <a class="text-white no-underline" href="/"> Blog Manager </a>
+          <a
+            class="text-gray-200 no-underline transition-colors hover:text-white"
+            href="/"
+          >
+            Blog Manager
+          </a>
         </h2>
         <div>
           <ul class="flex list-none items-center gap-3 text-lg text-black">
-            <a class="text-black no-underline" href="/users/sign-up">
+            <a class="text-black no-underline" href="/users/signup">
               <li class="flex items-center justify-center">
                 <button
-                  class="whitespace-nowrap rounded-lg border-[1px] border-solid border-gray-50 p-2 px-3 text-lg capitalize text-gray-50 transition-all hover:border-gray-200 hover:text-gray-200"
+                  class="whitespace-nowrap rounded-lg border-[1px] border-solid border-gray-200 p-2 px-3 text-lg capitalize text-gray-200 transition-all hover:border-white hover:text-white"
                 >
                   sign up
                 </button>
@@ -30,7 +34,7 @@
             <a class="text-black no-underline" href="/auth/logout">
               <li>
                 <button
-                  class="whitespace-nowrap rounded-lg border-[1px] border-solid border-gray-50 p-2 px-3 text-lg capitalize text-gray-50 transition-all hover:border-gray-200 hover:text-gray-200"
+                  class="whitespace-nowrap rounded-lg border-[1px] border-solid border-gray-200 p-2 px-3 text-lg capitalize text-gray-200 transition-all hover:border-white hover:text-white"
                 >
                   logout
                 </button>
@@ -40,7 +44,7 @@
             <a class="text-black no-underline" href="/auth/login">
               <li>
                 <button
-                  class="whitespace-nowrap rounded-lg border-[1px] border-solid border-gray-50 p-2 text-lg capitalize text-gray-50 transition-all hover:border-gray-200 hover:text-gray-200"
+                  class="whitespace-nowrap rounded-lg border-[1px] border-solid border-gray-200 p-2 text-lg capitalize text-gray-200 transition-all hover:border-white hover:text-white"
                 >
                   login
                 </button>

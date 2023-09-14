@@ -1,7 +1,7 @@
 const express = require("express");
 const indexRouter = express.Router();
 
-const authorization = require("../../middleware/authorization");
+const authorization = require("../../middleware/auth/authorization");
 const blogContentController = require("../../controllers/admin/contentController");
 
 /* GET home page. */

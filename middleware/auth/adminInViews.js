@@ -6,8 +6,8 @@ module.exports = (req, res, next) => {
     res.locals.adminAuth = req.isAuthenticated();
     res.locals.adminInfo = req.user;
   } else {
-    res.locals.adminAuth = undefined;
-    res.locals.adminInfo = undefined;
+    res.locals.adminAuth = null;
+    res.locals.adminInfo = null;
   }
 
   next();

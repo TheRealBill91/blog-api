@@ -1,13 +1,13 @@
 const User = require("../../models/user");
 const asyncHandler = require("express-async-handler");
-const passportStrategy = require("../../middleware/passportStrategy");
+const passportMiddleware = require("../../middleware/auth/passportConfig");
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
 const LocalStrategy = require("passport-local").Strategy;
 
 const { body, validationResult } = require("express-validator");
 
-passportStrategy();
+passportMiddleware.passportStrategy();
 
 // This is for the client login API
 exports.login_post = [

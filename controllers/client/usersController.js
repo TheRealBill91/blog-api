@@ -48,7 +48,7 @@ exports.signup_post = [
     .withMessage("Passwords do not match, try again")
     .escape(),
 
-  asyncHandler(async (req, res, next) => {
+  async (req, res, next) => {
     const errors = validationResult(req);
 
     // Errors exist in signup inputs
@@ -78,7 +78,12 @@ exports.signup_post = [
             membership_status: false,
             admin: false,
           });
-          await user.save();
+          try {
+            await user.save();
+          } catch (error) {
+            return res.status(error);
+          }
+
           if (req.isAuthenticated()) {
             req.logout(function (err) {
               if (err) {
@@ -101,5 +106,5 @@ exports.signup_post = [
         }
       });
     }
-  }),
+  },
 ];

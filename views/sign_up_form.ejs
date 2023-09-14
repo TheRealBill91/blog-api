@@ -9,25 +9,27 @@
   </head>
   <body class="flex min-h-[100dvh] flex-col">
     <%- include('header') -%>
-    <main class="flex flex-1 flex-col items-center justify-center gap-4 p-4">
+    <main
+      class="flex min-h-screen flex-1 flex-col items-center justify-center gap-4 p-4"
+    >
       <% if (typeof messageFailure !== 'undefined' && messageFailure.length > 0)
       { %>
       <div class="max-w-[300px]"><%= messageFailure %></div>
       <% } %>
       <div
-        class="min-w-[300px] rounded-xl bg-gray-200 px-10 py-6 shadow-sm shadow-gray-300"
+        class="rounded-xl bg-gray-200 px-10 py-6 shadow-sm shadow-gray-300 md:min-w-[350px]"
       >
         <h1 class="mb-4 text-center text-2xl font-bold">Sign Up</h1>
         <form action="" method="POST">
-          <div class="signUpFormContainer">
-            <div class="labelAndInput">
+          <div class="mb-3 flex flex-col gap-4">
+            <div class="flex flex-col gap-2 text-gray-700">
               <label
                 class="after:italic after:content-['(Required)']"
                 for="first_name"
                 >First Name
               </label>
               <input
-                class="rounded-md border-none focus:border-solid focus:border-black"
+                class="rounded-md border-none p-2 focus:border-solid focus:border-black"
                 value="<%= (typeof first_name === 'undefined') ? '' : first_name %>"
                 name="first_name"
                 placeholder="Bob"
@@ -48,7 +50,7 @@
                 >Last Name
               </label>
               <input
-                class="rounded-md border-none focus:border-solid focus:border-black"
+                class="rounded-md border-none p-2 focus:border-solid focus:border-black"
                 value="<%= (typeof last_name === 'undefined') ? '' : last_name %>"
                 name="last_name"
                 id="last_name"
@@ -70,7 +72,7 @@
                 >Email
               </label>
               <input
-                class="rounded-md border-none focus:border-solid focus:border-black"
+                class="rounded-md border-none p-2 focus:border-solid focus:border-black"
                 value="<%= (typeof email === 'undefined') ? '' : email %>"
                 name="email"
                 id="email"
@@ -92,7 +94,7 @@
                 >Password
               </label>
               <input
-                class="rounded-md border-none focus:border-solid focus:border-black"
+                class="rounded-md border-none p-2 focus:border-solid focus:border-black"
                 value="<%= (typeof password === 'undefined') ? '' : password %>"
                 id="password"
                 name="password"
@@ -113,7 +115,7 @@
                 >Confirm Password
               </label>
               <input
-                class="rounded-md border-none focus:border-solid focus:border-black"
+                class="rounded-md border-none p-2 focus:border-solid focus:border-black"
                 value="<%= (typeof confirm_password === 'undefined') ? '' : confirm_password %>"
                 name="confirm_password"
                 id="confirm_password"

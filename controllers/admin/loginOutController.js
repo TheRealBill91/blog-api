@@ -1,10 +1,10 @@
 const User = require("../../models/user");
 const asyncHandler = require("express-async-handler");
 const passport = require("passport");
-const passportStrategy = require("../../middleware/passportStrategy");
+const passportMiddleware = require("../../middleware/auth/passportConfig");
 const { body, validationResult } = require("express-validator");
 
-passportStrategy();
+passportMiddleware.passportStrategy();
 
 // Display login up form
 exports.login_get = (req, res, next) => {
