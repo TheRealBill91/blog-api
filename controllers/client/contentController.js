@@ -24,6 +24,7 @@ exports.blog_entries = async (req, res, next) => {
 
 exports.single_blog = async (req, res, next) => {
   const { postId } = req.params;
+
   const [blog, blogComments] = await Promise.all([
     Post.findById(postId)
       .populate({
@@ -34,8 +35,6 @@ exports.single_blog = async (req, res, next) => {
     Comment.find({ post: postId }).exec(),
   ]);
 
-  console.log(blogComments);
-
   if (blog === null) {
     return res.status(404).json({ message: "Blog does not exist" });
   }
@@ -44,30 +43,35 @@ exports.single_blog = async (req, res, next) => {
     return res.status(200).json([]);
   }
 
-  let blogCommentUpvotes;
+  let updatedComments;
+
   try {
-    blogCommentUpvotes = await Promise.all(
-      blogComments.map(async (blogComment) => {
-        const commentUpvotes = await CommentUpvote.find({
-          comment: blogComment.id,
-        }).countDocuments();
-        return commentUpvotes;
-      }),
-    );
-    console.log("blog comment upvotes" + blogCommentUpvotes);
+    const commentsPromises = blogComments.map(async (blogComment) => {
+      const commentUpvotes = await CommentUpvote.find({
+        comment: blogComment.id,
+      }).countDocuments();
+
+      const updatedBlogComment = new Comment({
+        _id: blogComment.id,
+        content: blogComment.content,
+        author: blogComment.author,
+        post: blogComment.post,
+        timestamp: blogComment.timestamp,
+        upvote: commentUpvotes,
+      });
+
+      return await Comment.findByIdAndUpdate(
+        blogComment.id,
+        updatedBlogComment,
+        {},
+      );
+    });
+    updatedComments = await Promise.all(commentsPromises);
   } catch (error) {
     res.status(400).json(error);
   }
 
-  blogComments.map(async (blogComment) => {
-    blogCommentUpvotes.forEach((commentUpvote) => {
-      blogComment.commentUpvoteCount = commentUpvote;
-    });
-    return blogCommentUpvotes;
-  });
-
-  console.log(blogComments);
-  return res.status(200).json(blogComments);
+  return res.status(200).json(updatedComments);
 };
 
 exports.comment_post = [
@@ -85,7 +89,8 @@ exports.comment_post = [
     const comment = new Comment({
       content: req.body.content,
       author: req.user.id,
-      post: req.params.id,
+      post: req.params.postId,
+      date: Date.now(),
     });
 
     if (!errors.isEmpty()) {
@@ -137,7 +142,14 @@ exports.comment_upvote = async (req, res) => {
       comment: commentId,
     }).exec();
 
-    console.log("upvote comment: " + upvotedComment);
+    // temporary for testing, delete before commit
+    /*  const commentUpvote = new CommentUpvote({
+      user: req.user.id,
+      comment: commentId,
+    });
+    await commentUpvote.save();
+    return res.status(200).json("comment upvoted successfully");
+ */
 
     if (upvotedComment.length > 0) {
       await CommentUpvote.findOneAndDelete(upvotedComment.id);
@@ -146,6 +158,7 @@ exports.comment_upvote = async (req, res) => {
       const commentUpvote = new CommentUpvote({
         user: req.user.id,
         comment: commentId,
+        timestamp: Date.now()
       });
       await commentUpvote.save();
       return res.status(200).json("comment upvoted successfully");

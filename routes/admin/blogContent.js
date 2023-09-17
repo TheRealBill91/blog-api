@@ -11,15 +11,43 @@ blogContentRouter.get(
   contentController.blog_entries,
 );
 
-blogContentRouter.get("/blogcreation", contentController.create_blog_get);
+blogContentRouter.get(
+  "/blogcreation",
+  authorization.adminAuthorization,
+  contentController.create_blog_get,
+);
 
-blogContentRouter.post("/blogsubmission", contentController.create_blog_post);
+blogContentRouter.post(
+  "/blogsubmission",
+  authorization.adminAuthorization,
+  contentController.create_blog_post,
+);
 
 // Static routes are placed before dynamic routes
 // to ensure correct route matching
 
-blogContentRouter.post("/post/:id/revision", contentController.blog_edit_post);
+blogContentRouter.post(
+  "/post/:postId/revision",
+  authorization.adminAuthorization,
+  contentController.blog_edit_post,
+);
 
-blogContentRouter.get("/post/:id/revision", contentController.blog_edit_get);
+blogContentRouter.get(
+  "/post/:postId/revision",
+  authorization.adminAuthorization,
+  contentController.blog_edit_get,
+);
+
+blogContentRouter.get(
+  "/comment/:commentId/deletion",
+  authorization.adminAuthorization,
+  contentController.comment_delete_get,
+);
+
+blogContentRouter.post(
+  "/comment/:commentId/deletion",
+  authorization.adminAuthorization,
+  contentController.comment_delete_post,
+);
 
 module.exports = blogContentRouter;

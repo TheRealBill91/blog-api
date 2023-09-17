@@ -9,9 +9,15 @@ const CommentSchema = new Schema(
     author: { type: Schema.Types.ObjectId, ref: "User" },
     post: { type: Schema.Types.ObjectId, ref: "Post" },
     timestamp: { type: Date },
+    upvote: { type: Number, default: 0 },
   },
   opts,
 );
+
+// Virtual for message URL
+CommentSchema.virtual("url").get(function () {
+  return `/comment/${this._id}`;
+});
 
 // Virtual for formatted date/time comment creation
 CommentSchema.virtual("formatted_date_stamp").get(function () {

@@ -10,16 +10,16 @@
   <body class="flex min-h-[100dvh] flex-col">
     <%- include('header') -%>
     <main
-      class="mx-6 mb-14 flex flex-1 flex-col items-center justify-center px-4 py-6"
+      class="mx-6 mb-14 flex flex-1 flex-col items-center justify-center gap-10 px-4 py-10"
     >
       <div
         class="min-w-[300px] rounded-xl bg-slate-200 px-10 py-12 pb-5 shadow-md"
       >
-        <h1
-          class="mx-3 border-b border-slate-400 pb-2 text-center text-xl font-semibold"
+        <h2
+          class="mx-3 border-b border-slate-400 pb-2 text-center text-3xl font-semibold"
         >
           <%= pageTitle %>
-        </h1>
+        </h2>
 
         <form action="" method="POST">
           <div
@@ -62,7 +62,7 @@
               <% } %> <% }); %> <% } %>
             </div>
 
-            <div class="flex items-center justify-between gap-6">
+            <div class="flex items-center justify-between gap-7">
               <label class="flex flex-col gap-1 capitalize" for="published"
                 >publish <% if (blog.published === true) { %>
                 <input
@@ -97,6 +97,51 @@
         <div class="max-w-[300px]"><%= messageFailure %></div>
         <% } %>
       </div>
+      <section class="flex flex-col gap-6">
+        <h2 class="text-center text-3xl font-semibold capitalize">
+          blog comments
+        </h2>
+        <% if (blogComments.length > 0) { %> <%
+        blogComments.forEach((blogComment, index) => { %>
+        <article
+          class="flex max-w-[1000px] flex-col gap-3 rounded-xl border-[1px] border-solid border-gray-600 p-5 px-7 py-4 text-2xl shadow-[5px_5px_9px_-2px_rgba(79,79,79,0.27)] lg:min-w-[550px]"
+        >
+          <div class="flex items-baseline justify-between gap-8">
+            <div class="flex items-baseline justify-start gap-2">
+              <p
+                class="border-r-[1px] border-solid border-gray-400 pr-2 text-xl font-bold"
+              >
+                <%= blogComment.author.full_name %>
+              </p>
+              <p class="text-[1rem] text-gray-500">
+                <%= blogComment.formatted_date_stamp %>
+              </p>
+            </div>
+            <div class="flex items-baseline gap-3">
+              <% if (commentUpvotes[index] !== 0){ %> <% if
+              (commentUpvotes[index] === 1) { %>
+              <p class="text-lg"><%= commentUpvotes[index] %> Upvote</p>
+              <% } else { %>
+              <p class="text-lg"><%= commentUpvotes[index] %> Upvotes</p>
+              <% } %> <% } %>
+              <a href="<%= blogComment.url+'/deletion'  %>">
+                <button
+                  class="rounded-lg border-[1px] border-solid border-gray-800 p-1 px-2 text-lg capitalize hover:underline"
+                >
+                  delete
+                </button>
+              </a>
+            </div>
+          </div>
+
+          <p class="py-2 text-[1.2rem]"><%= blogComment.content %></p>
+        </article>
+
+        <% }) %> <% } else { %>
+        <p>No comments for this blog...</p>
+
+        <% } %>
+      </section>
     </main>
   </body>
 </html>

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/stylesheets/normalize.css" />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <title><%= pageTitle %></title>
+  </head>
+  <body class="flex min-h-[100dvh] flex-col">
+    <%- include('header') -%>
+    <main
+      class="mx-6 mb-14 flex flex-1 flex-col items-center justify-center px-4 py-6"
+    >
+      <div class="min-w-[300px] rounded-xl gap-4 flex flex-col bg-slate-200 p-8 shadow-md">
+        <h2 class="text-2xl font-bold">
+          Do you really want to delete this comment?
+        </h2>
+        <p>
+          Author: <%= comment.author.first_name %>, <%= comment.author.last_name
+          %>
+        </p>
+        <p>Message: <%= comment.content %></p>
+
+        <form class="flex flex-col" method="POST" action="">
+          <input
+            id="commentId"
+            class="rounded-md bg-white p-2"
+            type="hidden"
+            name="commentId"
+            required="true"
+            value="<%= comment._id  %>"
+          />
+
+          <button
+            class="mt-3 self-center rounded-md border-[1px] border-solid border-gray-700 p-[10px] text-gray-700 transition-[color] duration-[0.1s] ease-linear hover:border-black hover:text-black"
+            type="submit"
+          >
+            Delete
+          </button>
+        </form>
+        <% if (typeof messageFailure !== 'undefined' && messageFailure.length) {
+        %>
+        <div class="messageFailure"><%= messageFailure %></div>
+        <% } %>
+      </div>
+    </main>
+  </body>
+</html>

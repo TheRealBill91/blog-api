@@ -2,6 +2,8 @@ const User = require("../../models/user");
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs");
 const Post = require("../../models/post");
+const Comment = require("../../models/comment");
+const CommentUpvote = require("../../models/comment_upvote");
 
 require("dotenv").config();
 const { body, validationResult } = require("express-validator");
@@ -67,8 +69,21 @@ exports.create_blog_post = [
 ];
 
 exports.blog_edit_get = asyncHandler(async (req, res, next) => {
-  const blog = await Post.findById(req.params.id).exec();
-  console.log(blog);
+  const { postId } = req.params;
+  const [blog, blogComments] = await Promise.all([
+    await Post.findById(postId).exec(),
+    await Comment.find({ post: postId }).populate("author").exec(),
+  ]);
+
+  const commentUpvotePromises = blogComments.map(async (blogComment) => {
+    const commentUpvotes = await CommentUpvote.find({
+      comment: blogComment.id,
+    }).countDocuments();
+    return commentUpvotes;
+  });
+
+  const commentUpvotes = await Promise.all(commentUpvotePromises);
+  console.log(commentUpvotes);
 
   if (!blog) {
     const err = new Error(404);
@@ -80,6 +95,8 @@ exports.blog_edit_get = asyncHandler(async (req, res, next) => {
     title: "Edit Blog",
     blogTitle: blog.title,
     blog: blog,
+    blogComments: blogComments,
+    commentUpvotes: commentUpvotes,
   });
 });
 
@@ -112,6 +129,7 @@ exports.blog_edit_post = [
         blogTitle: post.title,
         blog: post,
         errors: errors.array(),
+        blogComments: blogComments,
       });
     } else {
       const updatedBlog = await Post.findByIdAndUpdate(
@@ -123,3 +141,31 @@ exports.blog_edit_post = [
     }
   }),
 ];
+
+exports.comment_delete_get = asyncHandler(async (req, res, next) => {
+  const { commentId } = req.params;
+  const blogComment = await Comment.findById(commentId)
+    .populate("author")
+    .exec();
+
+  if (!blogComment) {
+    const err = new Error(404);
+    return next(err);
+  }
+
+  res.render("comment_delete_form", {
+    pageTitle: "Delete comment",
+    title: "Delete comment",
+    comment: blogComment,
+  });
+});
+
+exports.comment_delete_post = expressAsyncHandler(async (req, res, next) => {
+  const { commentId } = req.params;
+  const commentUpvotes = await CommentUpvote.deleteMany({
+    comment: commentId,
+  });
+
+  await Comment.findByIdAndDelete(commentId);
+  res.redirect("/");
+});

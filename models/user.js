@@ -10,4 +10,11 @@ const UserSchema = new Schema({
   admin: { type: Boolean },
 });
 
+// Virtual for first and last name
+UserSchema.virtual("full_name").get(function () {
+  let fullName = "";
+  fullName = `${this.first_name}, ${this.last_name}`;
+  return fullName;
+});
+
 module.exports = mongoose.model("User", UserSchema);
