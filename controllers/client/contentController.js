@@ -8,7 +8,10 @@ const { validationResult, body } = require("express-validator");
 
 // Retrieve blog entries for client frontend
 exports.blog_entries = async (req, res, next) => {
-  const blogEntries = await Post.find()
+  const blogEntries = await Post.find(
+    { published: true },
+    "-published",
+  )
     .populate({
       path: "author",
       select: "first_name last_name -_id ",
@@ -71,7 +74,7 @@ exports.single_blog = async (req, res, next) => {
     res.status(400).json(error);
   }
 
-  return res.status(200).json(updatedComments);
+  return res.status(200).json({ updatedComments: updatedComments, blog: blog });
 };
 
 exports.comment_post = [
@@ -158,7 +161,7 @@ exports.comment_upvote = async (req, res) => {
       const commentUpvote = new CommentUpvote({
         user: req.user.id,
         comment: commentId,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       });
       await commentUpvote.save();
       return res.status(200).json("comment upvoted successfully");

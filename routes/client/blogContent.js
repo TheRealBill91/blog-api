@@ -5,17 +5,9 @@ const blogContentController = require("../../controllers/client/contentControlle
 const authorization = require("../../middleware/auth/authorization");
 
 // copy this into client blogContent route
-blogContentRouter.get(
-  "/blog_entries",
-  authorization.userAuthorization,
-  blogContentController.blog_entries,
-);
+blogContentRouter.get("/blog_entries", blogContentController.blog_entries);
 
-blogContentRouter.get(
-  "/:postId",
-  authorization.userAuthorization,
-  blogContentController.single_blog,
-);
+blogContentRouter.get("/:postId", blogContentController.single_blog);
 
 blogContentRouter.post(
   "/:postId/comment_creation",

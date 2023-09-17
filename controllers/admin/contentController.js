@@ -119,7 +119,7 @@ exports.blog_edit_post = [
       content: req.body.content,
       author: req.user.id,
       published: req.body.publishStatus !== "" ? true : false,
-      id: req.params.id,
+      id: req.params.postId,
     });
 
     if (!errors.isEmpty()) {
@@ -133,7 +133,7 @@ exports.blog_edit_post = [
       });
     } else {
       const updatedBlog = await Post.findByIdAndUpdate(
-        req.params.id,
+        req.params.postId,
         post,
         {},
       ).exec();

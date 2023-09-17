@@ -46,7 +46,7 @@ if (app.get("env") !== "production") {
 }
 
 const corsConfig = {
-  origin: "http://localhost:*",
+  origin: "http://localhost:5173",
   optionsSuccessStatus: 200,
 };
 
