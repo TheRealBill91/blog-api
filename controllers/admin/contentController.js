@@ -83,7 +83,6 @@ exports.blog_edit_get = asyncHandler(async (req, res, next) => {
   });
 
   const commentUpvotes = await Promise.all(commentUpvotePromises);
-  console.log(commentUpvotes);
 
   if (!blog) {
     const err = new Error(404);
@@ -114,10 +113,13 @@ exports.blog_edit_post = [
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
 
+    const postDate = await Post.findById(req.params.postId, "timestamp");
+
     const post = new Post({
       title: req.body.title,
       content: req.body.content,
       author: req.user.id,
+      timestamp: postDate.timestamp,
       published: req.body.publishStatus !== "" ? true : false,
       id: req.params.postId,
     });

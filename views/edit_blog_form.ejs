@@ -13,10 +13,11 @@
       class="mx-6 mb-14 flex flex-1 flex-col items-center justify-center gap-10 px-4 py-10"
     >
       <div
-        class="min-w-[300px] rounded-xl bg-slate-200 px-10 py-12 pb-5 shadow-md"
+        class="flex min-w-[300px] relative flex-col rounded-xl bg-slate-200 px-10 py-12 pb-5 shadow-md"
       >
+        <p class="self-end absolute right-4 top-5">Created: <%= blog.formatted_date_stamp %></p>
         <h2
-          class="mx-3 border-b border-slate-400 pb-2 text-center text-3xl font-semibold"
+          class="mx-3 mt-4 flex items-center justify-center border-b border-slate-400 pb-2 text-center text-3xl font-semibold"
         >
           <%= pageTitle %>
         </h2>
