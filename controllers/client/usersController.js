@@ -1,4 +1,4 @@
-const User = require("../../models/user");
+const RegularUser = require("../../models/regular_user");
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs");
 require("dotenv").config();
@@ -7,15 +7,17 @@ const passport = require("passport");
 
 // POST request for user sign up
 exports.signup_post = [
-  body("first_name", "First name is required")
+  body("username", "Username is required")
     .trim()
-    .isLength({ min: 1 })
-    .withMessage("First name must be at least one letter")
-    .escape(),
-  body("last_name", "Last name is required")
-    .trim()
-    .isLength({ min: 1 })
-    .withMessage("Last name must be atleast one letter")
+    .isLength({ min: 1, max: 14 })
+    .withMessage("Username must be between 1 and 14 characters")
+    .custom(async (value) => {
+      const user = await RegularUser.find({ username: value });
+      if (user.length > 1) {
+        throw new Error("A user already exists with this username");
+      }
+    })
+    .withMessage("Username is taken, try something different")
     .escape(),
   body("email", "Email is required")
     .trim()
@@ -24,9 +26,9 @@ exports.signup_post = [
     .isEmail()
     .withMessage("Please enter a valid email (test@example.com")
     .custom(async (value) => {
-      const user = await User.find({ email: value });
-      if (user.length) {
-        throw new Error("A user already exists with this e-mail address");
+      const user = await RegularUser.find({ email: value });
+      if (user.length > 1) {
+        throw new Error("A user already exists with this email");
       }
     })
     .withMessage("Email address already exists")
@@ -38,6 +40,8 @@ exports.signup_post = [
     .withMessage(
       "Password must have 8 characters, 1 lowercase, 1 uppercase, & 1 number",
     )
+    .isLength({ min: 1, max: 20 })
+    .withMessage("Password must be between 1 and 20 characters")
     .escape(),
   body("password_confirmation", "You must confirm your password")
     .trim()
@@ -54,12 +58,6 @@ exports.signup_post = [
     // Errors exist in signup inputs
     if (!errors.isEmpty()) {
       res.status(401).json({
-        pageTitle: "Sign Up",
-        title: "Sign Up",
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        email: req.body.email,
-        password: req.body.password,
         errors: errors.array(),
       });
 
@@ -70,18 +68,15 @@ exports.signup_post = [
           console.log("Bcrypt error");
           res.status(500).json({ error: err.message });
         } else {
-          const user = new User({
-            first_name: req.body.first_name,
-            last_name: req.body.last_name,
+          const user = new RegularUser({
+            username: req.body.usernamem,
             email: req.body.email,
             password: hashedPassword,
-            membership_status: false,
-            admin: false,
           });
           try {
             await user.save();
           } catch (error) {
-            return res.status(error);
+            return res.sendStatus(error);
           }
 
           if (req.isAuthenticated()) {
@@ -108,3 +103,13 @@ exports.signup_post = [
     }
   },
 ];
+
+exports.auth_status = async (req, res, next) => {
+  const isAuth = req.isAuthenticated();
+  console.log(isAuth);
+  if (isAuth) {
+    return res.sendStatus(200);
+  } else {
+    return res.sendStatus(401);
+  }
+};

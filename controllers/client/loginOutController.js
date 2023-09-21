@@ -2,10 +2,8 @@ const User = require("../../models/user");
 const asyncHandler = require("express-async-handler");
 const passportMiddleware = require("../../middleware/auth/passportConfig");
 const passport = require("passport");
-const bcrypt = require("bcryptjs");
-const LocalStrategy = require("passport-local").Strategy;
 
-const { body, validationResult } = require("express-validator");
+const { body } = require("express-validator");
 
 passportMiddleware.passportStrategy();
 
@@ -21,7 +19,7 @@ exports.login_post = [
       }
       if (!user) {
         return res
-          .status(400)
+          .status(401)
           .json({ message: "Incorrect email and/or password" });
       }
       req.logIn(user, function (err) {
@@ -34,8 +32,7 @@ exports.login_post = [
   },
 ];
 
-exports.logout_get = (req, res, next) => {
-  console.log("getting to logout?");
+exports.logout_post = (req, res, next) => {
   req.logout(function (err) {
     if (err) {
       res.status(500).json(err);

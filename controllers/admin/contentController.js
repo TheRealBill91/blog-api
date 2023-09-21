@@ -40,7 +40,8 @@ exports.create_blog_post = [
   body("content", "Content is required")
     .trim()
     .isLength({ min: 8 })
-    .withMessage("Content must be at least one sentence."),
+    .withMessage("Content must be at least one sentence.")
+    .escape(),
 
   expressAsyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
@@ -113,6 +114,19 @@ exports.blog_edit_post = [
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
 
+    const blogComments = await Comment.find({ post: req.params.postId })
+      .populate("author")
+      .exec();
+
+    const commentUpvotePromises = blogComments.map(async (blogComment) => {
+      const commentUpvotes = await CommentUpvote.find({
+        comment: blogComment.id,
+      }).countDocuments();
+      return commentUpvotes;
+    });
+
+    const commentUpvotes = await Promise.all(commentUpvotePromises);
+
     const postDate = await Post.findById(req.params.postId, "timestamp");
 
     const post = new Post({
@@ -132,6 +146,7 @@ exports.blog_edit_post = [
         blog: post,
         errors: errors.array(),
         blogComments: blogComments,
+        commentUpvotes: commentUpvotes,
       });
     } else {
       const updatedBlog = await Post.findByIdAndUpdate(
