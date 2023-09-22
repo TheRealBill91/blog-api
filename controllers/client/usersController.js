@@ -24,7 +24,7 @@ exports.signup_post = [
     .isLength({ min: 5 })
     .withMessage("Email not long enough")
     .isEmail()
-    .withMessage("Please enter a valid email (test@example.com")
+    .withMessage("Please enter a valid email")
     .custom(async (value) => {
       const user = await RegularUser.find({ email: value });
       if (user.length > 1) {
@@ -43,8 +43,9 @@ exports.signup_post = [
     .isLength({ min: 1, max: 20 })
     .withMessage("Password must be between 1 and 20 characters")
     .escape(),
-  body("password_confirmation", "You must confirm your password")
+  body("passwordConfirmation", "You must confirm your password")
     .trim()
+    .isLength({ min: 1 })
     .custom((value, { req }) => {
       console.log(value);
       return value === req.body.password;
@@ -69,7 +70,7 @@ exports.signup_post = [
           res.status(500).json({ error: err.message });
         } else {
           const user = new RegularUser({
-            username: req.body.usernamem,
+            username: req.body.username,
             email: req.body.email,
             password: hashedPassword,
           });
@@ -106,7 +107,7 @@ exports.signup_post = [
 
 exports.auth_status = async (req, res, next) => {
   const isAuth = req.isAuthenticated();
-  console.log(isAuth);
+  // console.log("auth status: " + isAuth);
   if (isAuth) {
     return res.sendStatus(200);
   } else {
