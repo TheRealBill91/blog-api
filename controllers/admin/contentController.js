@@ -40,8 +40,7 @@ exports.create_blog_post = [
   body("content", "Content is required")
     .trim()
     .isLength({ min: 8 })
-    .withMessage("Content must be at least one sentence.")
-    .escape(),
+    .withMessage("Content must be at least one sentence."),
 
   expressAsyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
@@ -108,8 +107,7 @@ exports.blog_edit_post = [
   body("content", "Content is required")
     .trim()
     .isLength({ min: 8 })
-    .withMessage("Content must be at least one sentence.")
-    .escape(),
+    .withMessage("Content must be at least one sentence."),
   body("publishStatus").trim(),
 
   asyncHandler(async (req, res, next) => {

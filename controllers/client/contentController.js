@@ -128,7 +128,6 @@ exports.blog_comments = async (req, res, next) => {
 
 exports.comment_upvote = async (req, res) => {
   const { commentId } = req.params;
-  console.log("user id:" + req.user.id);
 
   try {
     const commentIdExists = await Comment.findById(commentId);

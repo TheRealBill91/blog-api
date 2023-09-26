@@ -5,7 +5,7 @@ const passport = require("passport");
 
 const { body } = require("express-validator");
 
-passportMiddleware.passportStrategy();
+passportMiddleware.passportStrategy("regularUser");
 
 // This is for the client login API
 exports.login_post = [
@@ -13,7 +13,7 @@ exports.login_post = [
   body("password").trim().escape(),
 
   function (req, res, next) {
-    passport.authenticate("local", function (err, user, info) {
+    passport.authenticate("local-regularUser", function (err, user, info) {
       if (err) {
         return res.json(err);
       }
@@ -21,6 +21,9 @@ exports.login_post = [
         return res
           .status(401)
           .json({ message: "Incorrect email and/or password" });
+      }
+      if (req.isAuthenticated()) {
+        return res.status(200).json({ message: "You're already logged in" });
       }
       req.logIn(user, function (err) {
         if (err) {
@@ -33,10 +36,15 @@ exports.login_post = [
 ];
 
 exports.logout_post = (req, res, next) => {
-  req.logout(function (err) {
-    if (err) {
-      res.status(500).json(err);
-    }
-  });
-  res.status(200).json({ message: "Successfully logged out" });
+  console.log("here?" + req.user);
+  if (req.user.source === "regularUser") {
+    
+    req.logout(function (err) {
+      if (err) {
+        res.status(500).json(err);
+      }
+    });
+    res.clearCookie("userSessionId");
+    res.status(200).json({ message: "Successfully logged out" });
+  }
 };

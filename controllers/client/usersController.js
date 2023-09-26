@@ -3,7 +3,9 @@ const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs");
 require("dotenv").config();
 const { body, validationResult } = require("express-validator");
+const unescape = require("validator");
 const passport = require("passport");
+const { request } = require("express");
 
 // POST request for user sign up
 exports.signup_post = [
@@ -12,9 +14,9 @@ exports.signup_post = [
     .isLength({ min: 1, max: 14 })
     .withMessage("Username must be between 1 and 14 characters")
     .custom(async (value) => {
-      const user = await RegularUser.find({ username: value });
-      if (user.length > 1) {
-        throw new Error("A user already exists with this username");
+      const user = await RegularUser.findOne({ username: value }).exec();
+      if (user) {
+        throw new Error();
       }
     })
     .withMessage("Username is taken, try something different")
@@ -26,9 +28,9 @@ exports.signup_post = [
     .isEmail()
     .withMessage("Please enter a valid email")
     .custom(async (value) => {
-      const user = await RegularUser.find({ email: value });
-      if (user.length > 1) {
-        throw new Error("A user already exists with this email");
+      const user = await RegularUser.findOne({ email: value }).exec();
+      if (user) {
+        throw new Error();
       }
     })
     .withMessage("Email address already exists")
@@ -36,22 +38,19 @@ exports.signup_post = [
     .escape(),
   body("password", "password is required")
     .trim()
-    .isStrongPassword({ minSymbols: 0 })
+    .isStrongPassword({ minSymbols: 1 })
     .withMessage(
       "Password must have 8 characters, 1 lowercase, 1 uppercase, & 1 number",
     )
     .isLength({ min: 1, max: 20 })
-    .withMessage("Password must be between 1 and 20 characters")
-    .escape(),
+    .withMessage("Password must be between 1 and 20 characters"),
   body("passwordConfirmation", "You must confirm your password")
     .trim()
     .isLength({ min: 1 })
     .custom((value, { req }) => {
-      console.log(value);
       return value === req.body.password;
     })
-    .withMessage("Passwords do not match, try again")
-    .escape(),
+    .withMessage("Passwords do not match, try again"),
 
   async (req, res, next) => {
     const errors = validationResult(req);
@@ -73,6 +72,7 @@ exports.signup_post = [
             username: req.body.username,
             email: req.body.email,
             password: hashedPassword,
+            source: "regularUser",
           });
           try {
             await user.save();
@@ -93,11 +93,11 @@ exports.signup_post = [
               return res.status(200).json(user);
             });
           }
-          req.login(user, function (err) {
+          req.logIn(user, function (err) {
             if (err) {
               return res.status(500).json({ error: err.message });
             }
-            res.status(200).json(user);
+            res.status(200).json(req.user);
           });
         }
       });
@@ -107,7 +107,7 @@ exports.signup_post = [
 
 exports.auth_status = async (req, res, next) => {
   const isAuth = req.isAuthenticated();
-  // console.log("auth status: " + isAuth);
+  //  console.log("auth status: " + isAuth);
   if (isAuth) {
     return res.sendStatus(200);
   } else {

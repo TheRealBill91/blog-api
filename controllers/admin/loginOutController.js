@@ -4,7 +4,7 @@ const passport = require("passport");
 const passportMiddleware = require("../../middleware/auth/passportConfig");
 const { body, validationResult } = require("express-validator");
 
-passportMiddleware.passportStrategy();
+passportMiddleware.passportStrategy("admin");
 
 // Display login up form
 exports.login_get = (req, res, next) => {
@@ -16,7 +16,7 @@ exports.login_get = (req, res, next) => {
 
 exports.login_post = [
   body("email").trim().isEmail().normalizeEmail().escape(),
-  body("password").trim().escape(),
+  body("password").trim(),
 
   passport.authenticate("local", {
     successRedirect: "/",
@@ -34,6 +34,7 @@ exports.login_post = [
 ];
 
 exports.logout_get = (req, res, next) => {
+
   req.logout(function (err) {
     if (err) {
       console.log(err);

@@ -72,14 +72,6 @@ const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 const mongoDB = process.env.MONGODB_URI || process.env.MONGODB_DEV_URI;
 
-const mongoStore = MongoStore.create({
-  mongoUrl: mongoDB,
-  ttl: 4 * 24 * 60 * 60, // expires after 4 days,
-  touchAfter: 24 * 3600, // only update session once per 24 hours (besides session data changing)
-  collectionName: "sessions",
-  crypto: crypto,
-});
-
 main().catch((err) => console.log(err));
 async function main() {
   await mongoose.connect(mongoDB);
@@ -92,24 +84,50 @@ app.set("view engine", "ejs");
 /* MAKE SURE TO USE TLS AND ADVANCED RATE LIMITING   */
 
 app.use(logger("dev"));
-// Need to configure cors further
-// app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(
-  session({
-    name: "sessionId",
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: cookie,
-    store: mongoStore,
-  }),
-);
+
+const userMongoStore = MongoStore.create({
+  mongoUrl: mongoDB,
+  ttl: 1 * 24 * 60 * 60, // expires after 4 days,
+  touchAfter: 24 * 3600, // only update session once per 24 hours (besides session data changing)
+  collectionName: "userSessions",
+  crypto: crypto,
+});
+
+const adminMongoStore = MongoStore.create({
+  mongoUrl: mongoDB,
+  ttl: 1 * 24 * 60 * 60, // expires after 4 days,
+  touchAfter: 24 * 3600, // only update session once per 24 hours (besides session data changing)
+  collectionName: "adminSessions",
+  crypto: crypto,
+});
+
+const adminSession = session({
+  name: "adminSessionId",
+  secret: process.env.ADMIN_SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: cookie,
+  store: adminMongoStore,
+});
+
+const userSession = session({
+  name: "userSessionId",
+  secret: process.env.USER_SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: cookie,
+  store: userMongoStore,
+});
+
+app.use(userSession);
+app.use(adminSession);
+
+passportMiddleware.passportInitialization(app);
 
 app.use(flash());
-passportMiddleware.passportInitialization(app);
 
 app.use(adminInViews);
 

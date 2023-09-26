@@ -43,15 +43,13 @@ exports.signup_post = [
     .trim()
     .isLength({ min: 5 })
     .withMessage("Password must be at least five charcters")
-    .isStrongPassword()
-    .escape(),
+    .isStrongPassword(),
   body("confirm_password", "You must confirm your password")
     .trim()
     .custom((value, { req }) => {
       return value === req.body.password;
     })
-    .withMessage("Passwords do not match, try again")
-    .escape(),
+    .withMessage("Passwords do not match, try again"),
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
