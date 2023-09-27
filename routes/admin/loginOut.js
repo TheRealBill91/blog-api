@@ -16,6 +16,6 @@ const userLoginLimiter = RateLimit({
 
 loginOutRouter.post("/login", userLoginLimiter, loginOut_controller.login_post);
 
-loginOutRouter.get("/logout", loginOut_controller.logout_get);
+loginOutRouter.post("/logout", loginOut_controller.logout_post);
 
 module.exports = loginOutRouter;

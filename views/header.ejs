@@ -31,15 +31,19 @@
               </li>
             </a>
             <% if ( adminAuth) { %>
-            <a class="text-black no-underline" href="/auth/logout">
-              <li>
-                <button
-                  class="whitespace-nowrap rounded-lg border-[1px] border-solid border-gray-200 p-2 px-3 text-lg capitalize text-gray-200 transition-all hover:border-white hover:text-white"
-                >
-                  logout
-                </button>
-              </li>
-            </a>
+            <form method="post" action="/auth/logout">
+              <a class="text-black no-underline">
+                <li>
+                  <button
+                    type="submit"
+                    class="whitespace-nowrap rounded-lg border-[1px] border-solid border-gray-200 p-2 px-3 text-lg capitalize text-gray-200 transition-all hover:border-white hover:text-white"
+                  >
+                    logout
+                  </button>
+                </li>
+              </a>
+            </form>
+
             <% } else { %>
             <a class="text-black no-underline" href="/auth/login">
               <li>

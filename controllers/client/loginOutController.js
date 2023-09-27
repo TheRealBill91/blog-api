@@ -37,14 +37,12 @@ exports.login_post = [
 
 exports.logout_post = (req, res, next) => {
   console.log("here?" + req.user);
-  if (req.user.source === "regularUser") {
-    
-    req.logout(function (err) {
-      if (err) {
-        res.status(500).json(err);
-      }
-    });
-    res.clearCookie("userSessionId");
-    res.status(200).json({ message: "Successfully logged out" });
-  }
+
+  req.logout(function (err) {
+    if (err) {
+      res.status(500).json(err);
+    }
+  });
+  res.clearCookie("userSessionId");
+  res.status(200).json({ message: "Successfully logged out" });
 };

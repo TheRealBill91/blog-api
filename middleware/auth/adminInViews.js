@@ -1,7 +1,6 @@
 // makes information about the admin’s authentication status and admin
 // information available in the views
 module.exports = (req, res, next) => {
-  console.log(req.user);
   if (req.user && req.user.admin === true) {
     res.locals.adminAuth = req.isAuthenticated();
     res.locals.adminInfo = req.user;

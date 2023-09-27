@@ -20,7 +20,7 @@ exports.login_post = [
 
   passport.authenticate("local", {
     successRedirect: "/",
-    failureRedirect: "/login",
+    failureRedirect: "/auth/login",
 
     failureFlash: {
       type: "messageFailure",
@@ -33,8 +33,7 @@ exports.login_post = [
   }),
 ];
 
-exports.logout_get = (req, res, next) => {
-
+exports.logout_post = (req, res, next) => {
   req.logout(function (err) {
     if (err) {
       console.log(err);

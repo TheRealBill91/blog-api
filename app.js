@@ -4,6 +4,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const flash = require("connect-flash");
+const flashMessageInViews = require("./middleware/auth/flashMessageInViews");
 const MongoStore = require("connect-mongo");
 const passport = require("passport");
 const session = require("express-session");
@@ -53,6 +54,7 @@ const corsConfig = {
 
 const cookie = {
   httpOnly: true,
+  sameSite: "lax",
 };
 
 // security option for mongo store
@@ -122,12 +124,25 @@ const userSession = session({
   store: userMongoStore,
 });
 
-app.use(userSession);
-app.use(adminSession);
+
+app.use((req, res, next) => {
+  if (req.path.startsWith("/client")) {
+    userSession(req, res, next);
+  } else {
+    adminSession(req, res, next);
+  }
+});
 
 passportMiddleware.passportInitialization(app);
 
+app.use((req,res,next) => {
+  console.log(req.session)
+  next()
+}) 
+
+
 app.use(flash());
+app.use(flashMessageInViews);
 
 app.use(adminInViews);
 
