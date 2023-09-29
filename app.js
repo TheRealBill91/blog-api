@@ -124,7 +124,6 @@ const userSession = session({
   store: userMongoStore,
 });
 
-
 app.use((req, res, next) => {
   if (req.path.startsWith("/client")) {
     userSession(req, res, next);
@@ -134,12 +133,6 @@ app.use((req, res, next) => {
 });
 
 passportMiddleware.passportInitialization(app);
-
-app.use((req,res,next) => {
-  console.log(req.session)
-  next()
-}) 
-
 
 app.use(flash());
 app.use(flashMessageInViews);

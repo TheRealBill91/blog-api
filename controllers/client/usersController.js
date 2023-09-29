@@ -107,7 +107,6 @@ exports.signup_post = [
 
 exports.auth_status = async (req, res, next) => {
   const isAuth = req.isAuthenticated();
-  //  console.log("auth status: " + isAuth);
   if (isAuth) {
     return res.sendStatus(200);
   } else {
