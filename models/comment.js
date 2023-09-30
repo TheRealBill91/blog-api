@@ -6,7 +6,7 @@ const opts = { toJSON: { virtuals: true } };
 const CommentSchema = new Schema(
   {
     content: { type: String, required: true },
-    author: { type: Schema.Types.ObjectId, ref: "User" },
+    author: { type: Schema.Types.ObjectId, ref: "RegularUser" },
     post: { type: Schema.Types.ObjectId, ref: "Post" },
     timestamp: { type: Date },
     upvote: { type: Number, default: 0 },

@@ -5,6 +5,7 @@ const Post = require("../../models/post");
 const Comment = require("../../models/comment");
 const CommentUpvote = require("../../models/comment_upvote");
 const { validationResult, body } = require("express-validator");
+const { DateTime } = require("luxon");
 
 // Retrieve blog entries for client frontend
 exports.blog_entries = async (req, res, next) => {
@@ -85,12 +86,11 @@ exports.comment_post = [
 
   async (req, res, next) => {
     const errors = validationResult(req);
-
     const comment = new Comment({
       content: req.body.content,
       author: req.user.id,
+      timestamp: DateTime.now().toISO(),
       post: req.params.postId,
-      date: Date.now(),
     });
 
     if (!errors.isEmpty()) {

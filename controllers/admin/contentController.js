@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const Post = require("../../models/post");
 const Comment = require("../../models/comment");
 const CommentUpvote = require("../../models/comment_upvote");
+require("dotenv").config();
 
 require("dotenv").config();
 const { body, validationResult } = require("express-validator");
@@ -70,6 +71,7 @@ exports.create_blog_post = [
 
 exports.blog_edit_get = asyncHandler(async (req, res, next) => {
   const { postId } = req.params;
+  const tinyMCEAPIKey = process.env.TINYMCE;
   const [blog, blogComments] = await Promise.all([
     await Post.findById(postId).exec(),
     await Comment.find({ post: postId }).populate("author").exec(),
@@ -89,6 +91,8 @@ exports.blog_edit_get = asyncHandler(async (req, res, next) => {
     return next(404);
   }
 
+  console.log(tinyMCEAPIKey);
+
   res.render("edit_blog_form", {
     pageTitle: "Edit Blog",
     title: "Edit Blog",
@@ -96,6 +100,7 @@ exports.blog_edit_get = asyncHandler(async (req, res, next) => {
     blog: blog,
     blogComments: blogComments,
     commentUpvotes: commentUpvotes,
+    tinyMCEAPIKey: tinyMCEAPIKey,
   });
 });
 
@@ -123,6 +128,8 @@ exports.blog_edit_post = [
       }).countDocuments();
       return commentUpvotes;
     });
+
+    console.log(req.body.content);
 
     const commentUpvotes = await Promise.all(commentUpvotePromises);
 

@@ -20,7 +20,17 @@ const clientRouter = require("./routes/client/clientRouter");
 const app = express();
 
 if (app.get("env") !== "production") {
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          scriptSrc: ["https://cdn.tiny.cloud", "'unsafe-inline'"],
+          connectSrc: ["'self'", "https://cdn.tiny.cloud"],
+          imgSrc: ["'self'", "data:", "https://sp.tinymce.com"],
+        },
+      },
+    }),
+  );
 } else {
   app.use(
     helmet({
