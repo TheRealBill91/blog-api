@@ -36,7 +36,6 @@ exports.login_post = [
 ];
 
 exports.logout_post = (req, res, next) => {
-  console.log("here?" + req.user);
 
   req.logout(function (err) {
     if (err) {

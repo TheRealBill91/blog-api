@@ -26,53 +26,18 @@ exports.blog_entries = async (req, res, next) => {
 exports.single_blog = async (req, res, next) => {
   const { postId } = req.params;
 
-  const [blog, blogComments] = await Promise.all([
-    Post.findById(postId)
-      .populate({
-        path: "author",
-        select: "first_name last_name -_id ",
-      })
-      .exec(),
-    Comment.find({ post: postId }).exec(),
-  ]);
+  const blog = await Post.findById(postId)
+    .populate({
+      path: "author",
+      select: "first_name last_name -_id ",
+    })
+    .exec();
 
   if (blog === null) {
     return res.status(404).json({ message: "Blog does not exist" });
   }
 
-  if (!blogComments.length > 0) {
-    return res.status(200).json([]);
-  }
-
-  let updatedComments;
-
-  try {
-    const commentsPromises = blogComments.map(async (blogComment) => {
-      const commentUpvotes = await CommentUpvote.find({
-        comment: blogComment.id,
-      }).countDocuments();
-
-      const updatedBlogComment = new Comment({
-        _id: blogComment.id,
-        content: blogComment.content,
-        author: blogComment.author,
-        post: blogComment.post,
-        timestamp: blogComment.timestamp,
-        upvote: commentUpvotes,
-      });
-
-      return await Comment.findByIdAndUpdate(
-        blogComment.id,
-        updatedBlogComment,
-        {},
-      );
-    });
-    updatedComments = await Promise.all(commentsPromises);
-  } catch (error) {
-    res.status(400).json(error);
-  }
-
-  return res.status(200).json({ updatedComments: updatedComments, blog: blog });
+  return res.status(200).json({ blog: blog });
 };
 
 exports.comment_post = [
@@ -115,13 +80,15 @@ exports.blog_comments = async (req, res, next) => {
   })
     .populate({
       path: "author",
-      select: "first_name last_name -_id ",
+      select: "username -_id ",
     })
     .exec();
 
   if (!allComments.length > 0) {
     return res.status(200).json([]);
   }
+
+  console.log(allComments);
 
   return res.status(200).json(allComments);
 };
@@ -141,14 +108,6 @@ exports.comment_upvote = async (req, res) => {
       comment: commentId,
     }).exec();
 
-    // temporary for testing, delete before commit
-    /*  const commentUpvote = new CommentUpvote({
-      user: req.user.id,
-      comment: commentId,
-    });
-    await commentUpvote.save();
-    return res.status(200).json("comment upvoted successfully"); */
-
     if (upvotedComment.length > 0) {
       await CommentUpvote.findOneAndDelete(upvotedComment.id);
       return res.status(200).json("Comment upvote removed");
@@ -166,4 +125,6 @@ exports.comment_upvote = async (req, res) => {
   }
 };
 
-exports.comment_upvotes_count = async (req, res) => {};
+exports.comment_upvotes_count = async (req, res) => {
+  
+};

@@ -11,6 +11,10 @@
     <script>
       tinymce.init({
         selector: "#tinyTextEditor",
+        plugins: "link",
+        width: 450,
+        menubar: false,
+        toolbar: ["h2 link"],
       });
     </script>
     <title><%= pageTitle %></title>
@@ -23,11 +27,14 @@
       <div
         class="relative flex min-w-[300px] flex-col rounded-xl bg-slate-200 px-10 py-12 pb-5 shadow-md"
       >
-        <p class="absolute right-4 top-5 self-end">
-          Created: <%= blog.formatted_date_stamp %>
-        </p>
+        <div
+          class="absolute right-4 top-5 rounded-lg border border-solid border-gray-700 p-3"
+        >
+          <p class="self-end">Created: <%= blog.formatted_date_stamp %></p>
+        </div>
+
         <h2
-          class="mx-3 mt-4 flex items-center justify-center border-b border-slate-400 pb-2 text-center text-3xl font-semibold"
+          class="mx-3 mt-12 flex items-center justify-center border-b border-slate-400 pb-2 text-center text-3xl font-semibold"
         >
           <%= pageTitle %>
         </h2>
@@ -37,7 +44,7 @@
             class="flex flex-1 flex-col items-center justify-center gap-4 px-4 py-6 pt-5"
           >
             <div class="flex w-full flex-col gap-2">
-              <label for="email">Title</label>
+              <label class="font-semibold" for="email">Title</label>
               <input
                 class="rounded-md p-2"
                 value="<%= (typeof blogTitle === 'undefined') ? '' : blogTitle %>"
@@ -54,8 +61,10 @@
             </div>
 
             <div class="flex w-full flex-col gap-2">
-              <label for="content">Content</label>
-              <textarea id="tinyTextEditor" name="content"></textarea>
+              <label class="font-semibold" for="content">Content</label>
+              <textarea id="tinyTextEditor" name="content">
+<%- blog.content    %></textarea
+              >
               <% if (typeof errors !== 'undefined') { %> <%
               errors.forEach(function(error) { %> <% if ((typeof error !==
               'undefined') && error.path === 'content') { %>

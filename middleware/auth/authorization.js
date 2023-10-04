@@ -8,7 +8,6 @@ exports.adminAuthorization = (req, res, next) => {
     if (req.path.startsWith("/client")) {
       res.status(403).json({ message: "Admin privileges required" });
     } else {
-      req.flash("messageFailure", "Admin privileges required");
       res.redirect("/auth/login");
     }
   }

@@ -91,8 +91,6 @@ exports.blog_edit_get = asyncHandler(async (req, res, next) => {
     return next(404);
   }
 
-  console.log(tinyMCEAPIKey);
-
   res.render("edit_blog_form", {
     pageTitle: "Edit Blog",
     title: "Edit Blog",
@@ -128,8 +126,6 @@ exports.blog_edit_post = [
       }).countDocuments();
       return commentUpvotes;
     });
-
-    console.log(req.body.content);
 
     const commentUpvotes = await Promise.all(commentUpvotePromises);
 

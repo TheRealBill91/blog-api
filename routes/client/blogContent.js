@@ -17,7 +17,6 @@ blogContentRouter.post(
 
 blogContentRouter.get(
   "/:postId/blog_comments",
-  authorization.userAuthorization,
   blogContentController.blog_comments,
 );
 
