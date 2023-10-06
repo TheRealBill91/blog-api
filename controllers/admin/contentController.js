@@ -74,7 +74,10 @@ exports.blog_edit_get = asyncHandler(async (req, res, next) => {
   const tinyMCEAPIKey = process.env.TINYMCE;
   const [blog, blogComments] = await Promise.all([
     await Post.findById(postId).exec(),
-    await Comment.find({ post: postId }).populate("author").exec(),
+    await Comment.find({ post: postId })
+      .populate("author")
+      .sort({ timestamp: -1 })
+      .exec(),
   ]);
 
   const commentUpvotePromises = blogComments.map(async (blogComment) => {

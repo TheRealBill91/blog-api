@@ -11,14 +11,13 @@
     <main
       class="mx-6 mb-14 flex flex-1 flex-col items-center justify-center px-4 py-6"
     >
-      <div class="min-w-[300px] rounded-xl gap-4 flex flex-col bg-slate-200 p-8 shadow-md">
+      <div
+        class="flex min-w-[300px] flex-col gap-4 rounded-xl bg-slate-200 p-8 shadow-md"
+      >
         <h2 class="text-2xl font-bold">
           Do you really want to delete this comment?
         </h2>
-        <p>
-          Author: <%= comment.author.first_name %>, <%= comment.author.last_name
-          %>
-        </p>
+        <p>Author: <%= comment.author.username %></p>
         <p>Message: <%= comment.content %></p>
 
         <form class="flex flex-col" method="POST" action="">

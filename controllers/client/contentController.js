@@ -14,6 +14,7 @@ exports.blog_entries = async (req, res, next) => {
       path: "author",
       select: "first_name last_name -_id ",
     })
+    .sort({ timestamp: -1 })
     .exec();
 
   if (!blogEntries.length > 0) {
@@ -45,9 +46,8 @@ exports.comment_post = [
     .trim()
     .isLength({ min: 2 })
     .withMessage("comment must be at least 2 characters")
-    .isLength({ max: 50 })
-    .withMessage("comment too long, 50 characters or less")
-    .escape(),
+    .isLength({ max: 500 })
+    .withMessage("comment too long, 50 characters or less"),
 
   async (req, res, next) => {
     const errors = validationResult(req);
@@ -58,9 +58,9 @@ exports.comment_post = [
       post: req.params.postId,
     });
 
+    console.log(errors.array());
     if (!errors.isEmpty()) {
       return res.status(400).json({
-        content: req.body.content,
         errors: errors.array(),
       });
     } else {
@@ -82,15 +82,30 @@ exports.blog_comments = async (req, res, next) => {
       path: "author",
       select: "username -_id ",
     })
+    .sort({ timestamp: -1 })
     .exec();
 
   if (!allComments.length > 0) {
     return res.status(200).json([]);
   }
 
-  console.log(allComments);
+  const updatedComments = await Promise.all(
+    allComments.map(async (comment) => {
+      const commentUpvoteStatus =
+        req.user &&
+        (await CommentUpvote.findOne({
+          user: req.user.id,
+          comment: comment.id,
+        }).exec());
+      const commentUpvoted = commentUpvoteStatus ? true : false;
+      const commentUpvotes = await CommentUpvote.find({ comment: comment.id })
+        .countDocuments()
+        .exec();
+      return { ...comment._doc, upvote: commentUpvotes, liked: commentUpvoted };
+    }),
+  );
 
-  return res.status(200).json(allComments);
+  return res.status(200).json(updatedComments);
 };
 
 exports.comment_upvote = async (req, res) => {
@@ -103,15 +118,20 @@ exports.comment_upvote = async (req, res) => {
       return res.status(404).json("Comment id does not exist");
     }
 
-    const upvotedComment = await CommentUpvote.find({
+    const upvotedComment = await CommentUpvote.findOne({
       user: req.user.id,
       comment: commentId,
     }).exec();
 
-    if (upvotedComment.length > 0) {
-      await CommentUpvote.findOneAndDelete(upvotedComment.id);
+    console.log(upvotedComment);
+
+    if (upvotedComment) {
+      const deletedCommentUpvote = await CommentUpvote.findOneAndDelete({
+        comment: commentId,
+      });
+
       return res.status(200).json("Comment upvote removed");
-    } else if (!upvotedComment.length > 0) {
+    } else if (!upvotedComment) {
       const commentUpvote = new CommentUpvote({
         user: req.user.id,
         comment: commentId,
@@ -123,8 +143,4 @@ exports.comment_upvote = async (req, res) => {
   } catch (error) {
     return res.status(400).json(error);
   }
-};
-
-exports.comment_upvotes_count = async (req, res) => {
-  
 };
