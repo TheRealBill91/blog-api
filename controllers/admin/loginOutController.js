@@ -36,7 +36,6 @@ exports.login_post = [
 exports.logout_post = (req, res, next) => {
   req.logout(function (err) {
     if (err) {
-      console.log(err);
       return next(err);
     }
   });

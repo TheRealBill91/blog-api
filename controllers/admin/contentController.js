@@ -13,7 +13,10 @@ const { DateTime } = require("luxon");
 
 // Retrieve blog entries for admin backend
 exports.blog_entries = asyncHandler(async (req, res, next) => {
-  const blogEntries = await Post.find().populate("author").exec();
+  const blogEntries = await Post.find()
+    .populate("author")
+    .sort({ published: -1 })
+    .exec();
 
   if (!blogEntries.length > 0) {
     const err = new Error(404);
@@ -188,6 +191,10 @@ exports.comment_delete_post = expressAsyncHandler(async (req, res, next) => {
     comment: commentId,
   });
 
+  // Use the comment id to get the associated post for redirect after comment deletion
+  const comment = await Comment.findById(commentId).exec();
+  const postId = comment.post;
+
   await Comment.findByIdAndDelete(commentId);
-  res.redirect("/");
+  res.redirect(`/post/${postId}/revision`);
 });

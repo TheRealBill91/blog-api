@@ -12,12 +12,15 @@ const cors = require("cors");
 const helmet = require("helmet");
 const adminInViews = require("./middleware/auth/adminInViews");
 const passportMiddleware = require("./middleware/auth/passportConfig");
+const favicon = require("serve-favicon");
 require("dotenv").config();
 
 const adminRouter = require("./routes/admin/adminRouter");
 const clientRouter = require("./routes/client/clientRouter");
 
 const app = express();
+
+app.use(favicon(path.join(__dirname, "public", "favicon.ico")));
 
 if (app.get("env") !== "production") {
   app.use(
@@ -93,8 +96,6 @@ async function main() {
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
-/* MAKE SURE TO USE TLS AND ADVANCED RATE LIMITING   */
-
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -102,7 +103,7 @@ app.use(cookieParser());
 
 const userMongoStore = MongoStore.create({
   mongoUrl: mongoDB,
-  ttl: 1 * 24 * 60 * 60, // expires after 4 days,
+  ttl: 1 * 24 * 60 * 60, // expires after 1 day,
   touchAfter: 24 * 3600, // only update session once per 24 hours (besides session data changing)
   collectionName: "userSessions",
   crypto: crypto,
@@ -110,7 +111,7 @@ const userMongoStore = MongoStore.create({
 
 const adminMongoStore = MongoStore.create({
   mongoUrl: mongoDB,
-  ttl: 1 * 24 * 60 * 60, // expires after 4 days,
+  ttl: 1 * 24 * 60 * 60, // expires after 1 day,
   touchAfter: 24 * 3600, // only update session once per 24 hours (besides session data changing)
   collectionName: "adminSessions",
   crypto: crypto,

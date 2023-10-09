@@ -58,7 +58,6 @@ exports.comment_post = [
       post: req.params.postId,
     });
 
-    console.log(errors.array());
     if (!errors.isEmpty()) {
       return res.status(400).json({
         errors: errors.array(),
@@ -122,8 +121,6 @@ exports.comment_upvote = async (req, res) => {
       user: req.user.id,
       comment: commentId,
     }).exec();
-
-    console.log(upvotedComment);
 
     if (upvotedComment) {
       const deletedCommentUpvote = await CommentUpvote.findOneAndDelete({
