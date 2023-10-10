@@ -13,6 +13,7 @@ const helmet = require("helmet");
 const adminInViews = require("./middleware/auth/adminInViews");
 const passportMiddleware = require("./middleware/auth/passportConfig");
 const favicon = require("serve-favicon");
+const compression = require("compression");
 require("dotenv").config();
 
 const adminRouter = require("./routes/admin/adminRouter");
@@ -22,42 +23,40 @@ const app = express();
 
 app.use(favicon(path.join(__dirname, "public", "favicon.ico")));
 
-if (app.get("env") !== "production") {
-  app.use(
-    helmet({
-      contentSecurityPolicy: {
-        directives: {
-          scriptSrc: ["https://cdn.tiny.cloud", "'unsafe-inline'"],
-          connectSrc: ["'self'", "https://cdn.tiny.cloud"],
-          imgSrc: ["'self'", "data:", "https://sp.tinymce.com"],
-        },
+app.use(compression()); // Compress all routes
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        // Only allow resources from the same origin to be loaded.
+        defaultSrc: ["'self'"],
+        // Only allow scripts from the same origin, www.billycummings.com, and tinycloud
+        scriptSrc: [
+          "'self'",
+          "www.billycummings.com",
+          "https://cdn.tiny.cloud",
+          "'unsafe-inline'",
+        ],
+        // Allow styles from the same origin and inline styles.
+        styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.tiny.cloud"],
+        // Only allow images from the same origin, data URIs, and tinymce
+        imgSrc: ["'self'", "data:", "https://sp.tinymce.com"],
+        // Only allow connections to the same origin, www.billycummings.com, and tinycloud
+        connectSrc: [
+          "'self'",
+          "www.billycummings.com",
+          "https://cdn.tiny.cloud",
+        ],
+        fontSrc: ["'self'", "https://cdn.tiny.cloud"],
+        // Don't allow the page to be embedded in an iframe (clickjacking protection).
+        frameAncestors: ["none"],
       },
-    }),
-  );
-} else {
-  app.use(
-    helmet({
-      contentSecurityPolicy: {
-        directives: {
-          // Only allow resources from the same origin to be loaded.
-          defaultSrc: ["'self'"],
-          // Only allow scripts from the same origin and www.billycummings.com.
-          scriptSrc: ["'self'", "'www.billycummings.com'"],
-          // Allow styles from the same origin and inline styles.
-          styleSrc: ["'self'", "'unsafe-inline'"],
-          // Only allow images from the same origin and data URIs.
-          imgSrc: ["'self'", "data:"],
-          // Only allow connections to the same origin and www.billycummings.com.
-          connectSrc: ["'self'", "'www.billycummings.com'"],
-          // Don't allow the page to be embedded in an iframe (clickjacking protection).
-          frameAncestors: ["'none'"],
-        },
-      },
-      // Don't send a Referer header.
-      referrerPolicy: { policy: "no-referrer" },
-    }),
-  );
-}
+    },
+    // Don't send a Referer header.
+    referrerPolicy: { policy: "no-referrer" },
+  }),
+);
 
 const corsConfig = {
   credentials: true,

@@ -38,6 +38,7 @@
     "tailwindcss": "^3.3.3"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.4.10",
     "concurrently": "^8.2.1",
     "ejs-lint": "^2.0.0",
     "nodemon": "^3.0.1",
