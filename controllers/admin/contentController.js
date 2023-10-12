@@ -13,7 +13,7 @@ const { DateTime } = require("luxon");
 
 // Retrieve blog entries for admin backend
 exports.blog_entries = asyncHandler(async (req, res, next) => {
-  const blogEntries = await Post.find()
+  const blogEntries = await Post.find({}, "-content")
     .populate("author")
     .sort({ published: -1 })
     .exec();

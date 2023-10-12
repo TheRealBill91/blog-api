@@ -19,7 +19,7 @@ usersRouter.get(
 
 const signupPostLimiter = RateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
-  max: 5, // Limit each IP to 5 requests per window
+  max: 10, // Limit each IP to 5 requests per window
   message: "Too many requests from this IP, please try again after an hour",
   standardHeaders: "draft-7", // draft-6: RateLimit-* headers; draft-7: combined RateLimit header
   legacyHeaders: false, // X-RateLimit-* headers

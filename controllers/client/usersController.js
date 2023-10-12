@@ -90,14 +90,16 @@ exports.signup_post = [
               if (err) {
                 return res.status(500).json({ error: err.message });
               }
-              return res.status(200).json(user);
+              return res
+                .status(200)
+                .json({ successMessage: "login successful" });
             });
           }
           req.logIn(user, function (err) {
             if (err) {
               return res.status(500).json({ error: err.message });
             }
-            res.status(200).json(req.user);
+            return res.status(200).json({ successMessage: "login successful" });
           });
         }
       });
