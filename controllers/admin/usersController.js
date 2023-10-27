@@ -43,7 +43,10 @@ exports.signup_post = [
     .trim()
     .isLength({ min: 5 })
     .withMessage("Password must be at least five charcters")
-    .isStrongPassword(),
+    .isStrongPassword()
+    .withMessage(
+      "Password must have 8 characters, 1 lowercase, 1 uppercase, 1 symbol, & 1 number",
+    ),
   body("confirm_password", "You must confirm your password")
     .trim()
     .custom((value, { req }) => {

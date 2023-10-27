@@ -1,5 +1,5 @@
 const express = require("express");
-const users_controller = require("../../controllers/client/usersController");
+const usersController = require("../../controllers/client/usersController");
 const usersRouter = express.Router();
 const RateLimit = require("express-rate-limit");
 
@@ -14,7 +14,7 @@ const authStatusGetLimiter = RateLimit({
 usersRouter.get(
   "/authstatus",
   authStatusGetLimiter,
-  users_controller.auth_status,
+  usersController.auth_status,
 );
 
 const signupPostLimiter = RateLimit({
@@ -25,6 +25,6 @@ const signupPostLimiter = RateLimit({
   legacyHeaders: false, // X-RateLimit-* headers
 });
 
-usersRouter.post("/signup", signupPostLimiter, users_controller.signup_post);
+usersRouter.post("/signup", signupPostLimiter, usersController.signup_post);
 
 module.exports = usersRouter;

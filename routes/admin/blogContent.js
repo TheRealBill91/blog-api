@@ -30,7 +30,7 @@ const blogCreationGetLimiter = RateLimit({
 });
 
 blogContentRouter.get(
-  "/blogcreation",
+  "/blog_submission",
   blogCreationGetLimiter,
   authorization.adminAuthorization,
   contentController.create_blog_get,
@@ -45,7 +45,7 @@ const blogSubmissionPostLimiter = RateLimit({
 });
 
 blogContentRouter.post(
-  "/blogsubmission",
+  "/blog_submission",
   blogSubmissionPostLimiter,
   authorization.adminAuthorization,
   contentController.create_blog_post,

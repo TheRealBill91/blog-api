@@ -1,6 +1,4 @@
-const User = require("../../models/user");
 const asyncHandler = require("express-async-handler");
-const bcrypt = require("bcryptjs");
 const Post = require("../../models/post");
 const Comment = require("../../models/comment");
 const CommentUpvote = require("../../models/comment_upvote");
@@ -18,10 +16,10 @@ exports.blog_entries = asyncHandler(async (req, res, next) => {
     .sort({ published: -1 })
     .exec();
 
-  if (!blogEntries.length > 0) {
-    const err = new Error(404);
-    return next(err);
-  }
+  // if (!blogEntries.length > 0) {
+  //   const err = new Error(404);
+  //   return next(err);
+  // }
 
   res.render("index", {
     pageTitle: "Blog Manager",
@@ -47,6 +45,7 @@ exports.create_blog_post = [
     .withMessage("Content must be at least one sentence."),
 
   expressAsyncHandler(async (req, res, next) => {
+    console.log("here?");
     const errors = validationResult(req);
 
     const post = new Post({
@@ -54,7 +53,7 @@ exports.create_blog_post = [
       content: req.body.content,
       author: req.user.id,
       timestamp: DateTime.now().toISO(),
-      published: req.body.publishStatus !== undefined ? true : false,
+      published: req.body.publishStatus !== undefined,
     });
 
     if (!errors.isEmpty()) {
@@ -66,7 +65,7 @@ exports.create_blog_post = [
         errors: errors.array(),
       });
     } else {
-      const newBlogEntry = await post.save();
+      await post.save();
       res.redirect("/");
     }
   }),
@@ -94,17 +93,17 @@ exports.blog_edit_get = asyncHandler(async (req, res, next) => {
 
   if (!blog) {
     const err = new Error(404);
-    return next(404);
+    return next(err);
   }
 
   res.render("edit_blog_form", {
     pageTitle: "Edit Blog",
     title: "Edit Blog",
     blogTitle: blog.title,
-    blog: blog,
-    blogComments: blogComments,
-    commentUpvotes: commentUpvotes,
-    tinyMCEAPIKey: tinyMCEAPIKey,
+    blog,
+    blogComments,
+    commentUpvotes,
+    tinyMCEAPIKey,
   });
 });
 
@@ -142,7 +141,7 @@ exports.blog_edit_post = [
       content: req.body.content,
       author: req.user.id,
       timestamp: postDate.timestamp,
-      published: req.body.publishStatus !== "" ? true : false,
+      published: req.body.publishStatus !== "",
       id: req.params.postId,
     });
 
@@ -153,15 +152,11 @@ exports.blog_edit_post = [
         blogTitle: post.title,
         blog: post,
         errors: errors.array(),
-        blogComments: blogComments,
-        commentUpvotes: commentUpvotes,
+        blogComments,
+        commentUpvotes,
       });
     } else {
-      const updatedBlog = await Post.findByIdAndUpdate(
-        req.params.postId,
-        post,
-        {},
-      ).exec();
+      await Post.findByIdAndUpdate(req.params.postId, post, {}).exec();
       res.redirect("/");
     }
   }),
@@ -187,7 +182,7 @@ exports.comment_delete_get = asyncHandler(async (req, res, next) => {
 
 exports.comment_delete_post = expressAsyncHandler(async (req, res, next) => {
   const { commentId } = req.params;
-  const commentUpvotes = await CommentUpvote.deleteMany({
+  await CommentUpvote.deleteMany({
     comment: commentId,
   });
 

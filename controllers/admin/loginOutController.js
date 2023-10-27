@@ -1,8 +1,6 @@
-const User = require("../../models/user");
-const asyncHandler = require("express-async-handler");
 const passport = require("passport");
 const passportMiddleware = require("../../middleware/auth/passportConfig");
-const { body, validationResult } = require("express-validator");
+const { body } = require("express-validator");
 
 passportMiddleware.passportStrategy("admin");
 

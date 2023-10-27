@@ -31,6 +31,7 @@
     "mongoose": "^7.5.0",
     "morgan": "~1.9.1",
     "passport": "^0.6.0",
+    "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
     "postcss": "^8.4.29",
     "postcss-cli": "^10.1.0",
@@ -41,8 +42,15 @@
     "@flydotio/dockerfile": "^0.4.10",
     "concurrently": "^8.2.1",
     "ejs-lint": "^2.0.0",
+    "eslint": "^8.52.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-n": "^16.2.0",
+    "eslint-plugin-promise": "^6.1.1",
     "nodemon": "^3.0.1",
     "prettier": "^3.0.3",
+    "prettier-eslint": "^16.1.1",
     "prettier-plugin-tailwindcss": "^0.5.4"
   }
 }

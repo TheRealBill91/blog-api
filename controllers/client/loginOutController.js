@@ -3,9 +3,21 @@ const asyncHandler = require("express-async-handler");
 const passportMiddleware = require("../../middleware/auth/passportConfig");
 const passport = require("passport");
 
+require("dotenv").config();
+
 const { body } = require("express-validator");
 
 passportMiddleware.passportStrategy("regularUser");
+passportMiddleware.passportStrategy("google");
+
+const CLIENT_LOGIN_SUCCESS_URL =
+  "http://localhost:5173/blog/google/loginsuccess";
+
+const CLIENT_LOGIN_FAILURE_URL = "http://localhost:5173/blog/signin";
+
+exports.google_login = passport.authenticate("google", { scope: ["profile"] });
+
+// exports.google_login_redirect =
 
 // This is for the client login API
 exports.login_post = [
@@ -34,6 +46,25 @@ exports.login_post = [
     })(req, res, next);
   },
 ];
+
+// Confirms user auth for google login
+exports.google_login_success = (req, res, next) => {
+  const isAuthenticated = req.user && req.isAuthenticated();
+  if (isAuthenticated) {
+    return res.status(200).json({ message: "user login successful" });
+  } else {
+    return res.status(400).json({ message: "user login unsuccessful" });
+  }
+};
+
+// Handles failed google login
+exports.google_login_failure = (req, res, next) => {
+  return res.redirect(CLIENT_LOGIN_FAILURE_URL);
+};
+
+// exports.google_login_redirect = (req, res, next) => {
+
+// };
 
 exports.logout_post = (req, res, next) => {
   req.logout(function (err) {

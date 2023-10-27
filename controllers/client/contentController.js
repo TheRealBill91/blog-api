@@ -38,7 +38,7 @@ exports.single_blog = async (req, res, next) => {
     return res.status(404).json({ message: "Blog does not exist" });
   }
 
-  return res.status(200).json({ blog: blog });
+  return res.status(200).json({ blog });
 };
 
 exports.comment_post = [
@@ -96,7 +96,7 @@ exports.blog_comments = async (req, res, next) => {
           user: req.user.id,
           comment: comment.id,
         }).exec());
-      const commentUpvoted = commentUpvoteStatus ? true : false;
+      const commentUpvoted = !!commentUpvoteStatus;
       const commentUpvotes = await CommentUpvote.find({ comment: comment.id })
         .countDocuments()
         .exec();

@@ -6,7 +6,6 @@ const logger = require("morgan");
 const flash = require("connect-flash");
 const flashMessageInViews = require("./middleware/auth/flashMessageInViews");
 const MongoStore = require("connect-mongo");
-const passport = require("passport");
 const session = require("express-session");
 const cors = require("cors");
 const helmet = require("helmet");
@@ -20,6 +19,13 @@ const adminRouter = require("./routes/admin/adminRouter");
 const clientRouter = require("./routes/client/clientRouter");
 
 const app = express();
+
+const corsConfig = {
+  credentials: true,
+  origin: "http://localhost:5173",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  optionsSuccessStatus: 200,
+};
 
 app.use(favicon(path.join(__dirname, "public", "favicon.ico")));
 
@@ -58,12 +64,6 @@ app.use(
   }),
 );
 
-const corsConfig = {
-  credentials: true,
-  origin: "http://localhost:5173",
-  optionsSuccessStatus: 200,
-};
-
 const cookie = {
   httpOnly: true,
   sameSite: "lax",
@@ -74,21 +74,29 @@ const crypto = {
   secret: false,
 };
 
+const dbName =
+  app.get("env") === "production"
+    ? process.env.PROD_DB_NAME
+    : process.env.DEV_DB_NAME;
+
 if (app.get("env") === "production") {
   app.set("trust proxy", 1);
-  (cookie.secure = true),
-    (crypto.secret = process.env.CRYPTO_SECRET),
-    (corsConfig.origin = "https://www.billycummings.com");
+  cookie.secure = true;
+  crypto.secret = process.env.CRYPTO_SECRET;
+  corsConfig.origin = "https://www.billycummings.com";
 }
 
 // Set up mongoose connection
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
-const mongoDB = process.env.MONGODB_URI || process.env.MONGODB_DEV_URI;
+const dbUri = process.env.MONGODB_DEV_URI || process.env.MONGODB_URI;
 
 main().catch((err) => console.log(err));
 async function main() {
-  await mongoose.connect(mongoDB);
+  await mongoose.connect(dbUri, {
+    dbName,
+    retryWrites: true,
+  });
 }
 
 // view engine setup
@@ -101,19 +109,21 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 const userMongoStore = MongoStore.create({
-  mongoUrl: mongoDB,
+  mongoUrl: dbUri,
   ttl: 1 * 24 * 60 * 60, // expires after 1 day,
   touchAfter: 24 * 3600, // only update session once per 24 hours (besides session data changing)
+  dbName,
   collectionName: "userSessions",
-  crypto: crypto,
+  crypto,
 });
 
 const adminMongoStore = MongoStore.create({
-  mongoUrl: mongoDB,
+  mongoUrl: dbUri,
   ttl: 1 * 24 * 60 * 60, // expires after 1 day,
   touchAfter: 24 * 3600, // only update session once per 24 hours (besides session data changing)
+  dbName,
   collectionName: "adminSessions",
-  crypto: crypto,
+  crypto,
 });
 
 const adminSession = session({
@@ -121,7 +131,7 @@ const adminSession = session({
   secret: process.env.ADMIN_SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: cookie,
+  cookie,
   store: adminMongoStore,
 });
 
@@ -130,7 +140,7 @@ const userSession = session({
   secret: process.env.USER_SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: cookie,
+  cookie,
   store: userMongoStore,
 });
 
