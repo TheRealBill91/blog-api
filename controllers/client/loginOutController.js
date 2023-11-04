@@ -4,11 +4,8 @@ require("dotenv").config();
 
 const { body } = require("express-validator");
 
-const CLIENT_LOGIN_FAILURE_URL = "http://localhost:5173/blog/signin";
-const CLIENT_LOGIN_SUCCESS_URL =
-  "http://localhost:5173/blog/google/loginsuccess";
-
-// exports.google_login = passport.authenticate("google", { scope: ["profile"] });
+const CLIENT_LOGIN_FAILURE_URL = `${process.env.CLIENT_LOGIN_URL}/client/auth/login/failure`;
+const CLIENT_LOGIN_SUCCESS_URL = `${process.env.CLIENT_LOGIN_URL}/blog/google/loginsuccess`;
 
 // This is for the client login API
 exports.login_post = [
@@ -20,7 +17,7 @@ exports.login_post = [
       if (err) {
         return res.json(err);
       }
-      
+
       if (!user) {
         return res
           .status(401)
@@ -48,7 +45,7 @@ exports.google_login = (req, res, next) => {
 
 exports.google_login_redirect = (req, res, next) => {
   const handleGoogleLoginRedirect = passport.authenticate("google", {
-    failureRedirect: "/client/auth/login/failure",
+    failureRedirect: CLIENT_LOGIN_FAILURE_URL,
     successRedirect: CLIENT_LOGIN_SUCCESS_URL,
   });
   handleGoogleLoginRedirect(req, res, next);
