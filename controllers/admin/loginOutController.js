@@ -1,8 +1,6 @@
 const passport = require("passport");
-const passportMiddleware = require("../../middleware/auth/passportConfig");
 const { body } = require("express-validator");
 
-passportMiddleware.passportStrategy("admin");
 
 // Display login up form
 exports.login_get = (req, res, next) => {
@@ -11,6 +9,8 @@ exports.login_get = (req, res, next) => {
     title: "Log in",
   });
 };
+
+
 
 exports.login_post = [
   body("email").trim().isEmail().normalizeEmail().escape(),

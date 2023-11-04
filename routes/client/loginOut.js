@@ -1,13 +1,8 @@
 const express = require("express");
 const loginOutRouter = express.Router();
 
-const loginOut_controller = require("../../controllers/client/loginOutController");
+const loginOutController = require("../../controllers/client/loginOutController");
 const RateLimit = require("express-rate-limit");
-
-const passport = require("passport");
-
-const CLIENT_LOGIN_SUCCESS_URL =
-  "http://localhost:5173/blog/google/loginsuccess";
 
 const userLoginPostLimiter = RateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
@@ -20,7 +15,7 @@ const userLoginPostLimiter = RateLimit({
 loginOutRouter.post(
   "/login",
   userLoginPostLimiter,
-  loginOut_controller.login_post,
+  loginOutController.login_post,
 );
 
 const logoutPostLimiter = RateLimit({
@@ -33,32 +28,35 @@ const logoutPostLimiter = RateLimit({
 });
 
 // Confirms user auth for google login
-loginOutRouter.get("/login/success", loginOut_controller.google_login_success);
+loginOutRouter.get(
+  "/google_login/success",
+  userLoginPostLimiter,
+  loginOutController.google_login_success,
+);
 
 // Handles google login failure
-loginOutRouter.get("/login/failure", loginOut_controller.google_login_failure);
+loginOutRouter.get(
+  "/google_login/failure",
+  userLoginPostLimiter,
+  loginOutController.google_login_failure,
+);
 
 loginOutRouter.get(
   "/login/google",
-  passport.authenticate("google", {
-    prompt: "select_account",
-  }),
+  userLoginPostLimiter,
+  loginOutController.google_login,
 );
 
 loginOutRouter.get(
   "/oauth2/redirect/google",
-  passport.authenticate("google", {
-    failureRedirect: "/client/auth/login/failure",
-  }),
-  function (req, res) {
-    res.redirect(CLIENT_LOGIN_SUCCESS_URL);
-  },
+  userLoginPostLimiter,
+  loginOutController.google_login_redirect,
 );
 
 loginOutRouter.post(
   "/logout",
   logoutPostLimiter,
-  loginOut_controller.logout_post,
+  loginOutController.logout_post,
 );
 
 module.exports = loginOutRouter;

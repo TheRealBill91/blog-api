@@ -43,10 +43,12 @@ async function seedDB() {
   for (let i = 0; i < 480; i++) {
     // Create enough users for max possible upvotes
     const user = await RegularUser.create({
-      username: `user${i}`,
-      email: `user${i}@example.com`,
-      password: generatePassword(),
-      source: "seedDB",
+      method: "local",
+      local: {
+        username: `user${i}`,
+        email: `user${i}@example.com`,
+        password: generatePassword(),
+      },
     });
     users.push(user);
   }

@@ -1,6 +1,3 @@
-const User = require("../../models/user");
-const asyncHandler = require("express-async-handler");
-const bcrypt = require("bcryptjs");
 const Post = require("../../models/post");
 const Comment = require("../../models/comment");
 const CommentUpvote = require("../../models/comment_upvote");
@@ -47,7 +44,7 @@ exports.comment_post = [
     .isLength({ min: 2 })
     .withMessage("comment must be at least 2 characters")
     .isLength({ max: 500 })
-    .withMessage("comment too long, 50 characters or less"),
+    .withMessage("comment too long, 500 characters or less"),
 
   async (req, res, next) => {
     const errors = validationResult(req);
@@ -65,7 +62,7 @@ exports.comment_post = [
     } else {
       try {
         await comment.save();
-        return res.status(200).json({ message: "comment saved" });
+        return res.status(201).json({ message: "comment saved" });
       } catch (error) {
         return res.status(400).json(`Something went wrong ${error}`);
       }
@@ -79,7 +76,7 @@ exports.blog_comments = async (req, res, next) => {
   })
     .populate({
       path: "author",
-      select: "username -_id ",
+      select: "username local.username google.firstName google.lastName -_id ",
     })
     .sort({ timestamp: -1 })
     .exec();
@@ -123,11 +120,11 @@ exports.comment_upvote = async (req, res) => {
     }).exec();
 
     if (upvotedComment) {
-      const deletedCommentUpvote = await CommentUpvote.findOneAndDelete({
+      await CommentUpvote.findOneAndDelete({
         comment: commentId,
       });
 
-      return res.status(200).json("Comment upvote removed");
+      return res.status(201).json("Comment upvote removed");
     } else if (!upvotedComment) {
       const commentUpvote = new CommentUpvote({
         user: req.user.id,
@@ -135,7 +132,7 @@ exports.comment_upvote = async (req, res) => {
         timestamp: Date.now(),
       });
       await commentUpvote.save();
-      return res.status(200).json("comment upvoted successfully");
+      return res.status(201).json("comment upvoted successfully");
     }
   } catch (error) {
     return res.status(400).json(error);

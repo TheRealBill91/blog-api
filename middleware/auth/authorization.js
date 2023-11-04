@@ -16,7 +16,7 @@ exports.adminAuthorization = (req, res, next) => {
 exports.userAuthorization = (req, res, next) => {
   const isAuthenticated = req.user && req.isAuthenticated();
 
-  if (isAuthenticated && req.user.source === "regularUser") {
+  if (isAuthenticated && (req.user.method === "local" || "google")) {
     next();
   } else {
     res.status(401).json({ message: "User authentication required" });

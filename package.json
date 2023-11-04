@@ -1,46 +1,48 @@
 {
   "name": "blog-server",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "tailwind:css": "postcss public/stylesheets/tailwind.css -o public/stylesheets/tailwindpresets.css",
     "start": "node ./bin/www",
     "devStart": "nodemon ./bin/www",
     "serverStart": "DEBUG=express-blog-server:* npm run devStart",
-    "dev": "concurrently \"npm run tailwind:css -- -w\" \"npm run devStart\""
+    "dev": "concurrently \"npm run tailwind:css -- -w\" \"npm run devStart\"",
+    "debugStart": "nodemon --inspect ./bin/www",
+    "debug": "concurrently \"npm run tailwind:css -- -w\" \"npm run debugStart\""
   },
   "dependencies": {
-    "autoprefixer": "^10.4.15",
+    "autoprefixer": "^10.4.16",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
     "connect-flash": "^0.1.1",
-    "connect-mongo": "^5.0.0",
-    "cookie-parser": "~1.4.4",
+    "connect-mongo": "^5.1.0",
+    "cookie-parser": "~1.4.6",
     "cors": "^2.8.5",
-    "debug": "~2.6.9",
+    "debug": "~4.3.4",
     "dotenv": "^16.3.1",
-    "ejs": "~2.6.1",
-    "express": "~4.16.1",
+    "ejs": "~3.1.9",
+    "express": "~4.18.2",
     "express-async-handler": "^1.2.0",
-    "express-rate-limit": "^6.11.0",
+    "express-rate-limit": "^7.1.3",
     "express-session": "^1.17.3",
     "express-validator": "^7.0.1",
     "helmet": "^7.0.0",
-    "http-errors": "~1.6.3",
+    "http-errors": "~2.0.0",
     "luxon": "^3.4.3",
-    "mongoose": "^7.5.0",
-    "morgan": "~1.9.1",
+    "mongoose": "^7.6.3",
+    "morgan": "~1.10.0",
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
-    "postcss": "^8.4.29",
+    "postcss": "^8.4.31",
     "postcss-cli": "^10.1.0",
     "serve-favicon": "^2.5.0",
-    "tailwindcss": "^3.3.3"
+    "tailwindcss": "^3.3.5"
   },
   "devDependencies": {
     "@flydotio/dockerfile": "^0.4.10",
-    "concurrently": "^8.2.1",
+    "concurrently": "^8.2.2",
     "ejs-lint": "^2.0.0",
     "eslint": "^8.52.0",
     "eslint-config-prettier": "^9.0.0",
@@ -50,7 +52,7 @@
     "eslint-plugin-promise": "^6.1.1",
     "nodemon": "^3.0.1",
     "prettier": "^3.0.3",
-    "prettier-eslint": "^16.1.1",
-    "prettier-plugin-tailwindcss": "^0.5.4"
+    "prettier-eslint": "^16.1.2",
+    "prettier-plugin-tailwindcss": "^0.5.6"
   }
 }

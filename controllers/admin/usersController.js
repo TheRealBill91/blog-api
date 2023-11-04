@@ -3,7 +3,6 @@ const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs");
 require("dotenv").config();
 const { body, validationResult } = require("express-validator");
-const passport = require("passport");
 
 // Display sign up form
 exports.signup_get = (req, res, next) => {

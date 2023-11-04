@@ -1,7 +1,7 @@
 node_modules
 .env
 .vscode
-.cookies.txt
 .dockerignore
 Dockerfile
 fly.toml
+cookies.txt

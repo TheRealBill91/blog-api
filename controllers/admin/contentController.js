@@ -45,7 +45,6 @@ exports.create_blog_post = [
     .withMessage("Content must be at least one sentence."),
 
   expressAsyncHandler(async (req, res, next) => {
-    console.log("here?");
     const errors = validationResult(req);
 
     const post = new Post({

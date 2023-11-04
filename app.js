@@ -10,10 +10,11 @@ const session = require("express-session");
 const cors = require("cors");
 const helmet = require("helmet");
 const adminInViews = require("./middleware/auth/adminInViews");
-const passportMiddleware = require("./middleware/auth/passportConfig");
 const favicon = require("serve-favicon");
 const compression = require("compression");
 require("dotenv").config();
+
+const passportConfig = require("./middleware/auth/passportConfig");
 
 const adminRouter = require("./routes/admin/adminRouter");
 const clientRouter = require("./routes/client/clientRouter");
@@ -26,6 +27,8 @@ const corsConfig = {
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   optionsSuccessStatus: 200,
 };
+
+app.use(cors(corsConfig));
 
 app.use(favicon(path.join(__dirname, "public", "favicon.ico")));
 
@@ -89,6 +92,7 @@ if (app.get("env") === "production") {
 // Set up mongoose connection
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
+
 const dbUri = process.env.MONGODB_DEV_URI || process.env.MONGODB_URI;
 
 main().catch((err) => console.log(err));
@@ -152,10 +156,18 @@ app.use((req, res, next) => {
   }
 });
 
-passportMiddleware.passportInitialization(app);
+passportConfig.passportInitialization(app);
 
 app.use(flash());
-app.use(flashMessageInViews);
+
+app.use((req, res, next) => {
+  if (!req.path.startsWith("/client")) {
+    flashMessageInViews(req, res, next);
+    next();
+  } else {
+    next();
+  }
+});
 
 app.use(adminInViews);
 
@@ -163,7 +175,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", adminRouter);
 
-app.use("/client", cors(corsConfig), clientRouter);
+app.use("/client", clientRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

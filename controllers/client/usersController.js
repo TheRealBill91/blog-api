@@ -1,11 +1,7 @@
 const RegularUser = require("../../models/regular_user");
-const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs");
 require("dotenv").config();
 const { body, validationResult } = require("express-validator");
-const unescape = require("validator");
-const passport = require("passport");
-const { request } = require("express");
 
 // POST request for user sign up
 exports.signup_post = [
@@ -69,10 +65,12 @@ exports.signup_post = [
           res.status(500).json({ error: err.message });
         } else {
           const user = new RegularUser({
-            username: req.body.username,
-            email: req.body.email,
-            password: hashedPassword,
-            source: "regularUser",
+            method: "local",
+            local: {
+              username: req.body.username,
+              email: req.body.email,
+              password: hashedPassword,
+            },
           });
           try {
             await user.save();
@@ -99,7 +97,7 @@ exports.signup_post = [
             if (err) {
               return res.status(500).json({ error: err.message });
             }
-            return res.status(200).json({ successMessage: "login successful" });
+            return res.status(201).json({ successMessage: "login successful" });
           });
         }
       });
