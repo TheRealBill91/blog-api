@@ -5,7 +5,7 @@ exports.adminAuthorization = (req, res, next) => {
   if (isAuthenticated && isAdmin) {
     return next();
   } else {
-    if (req.path.startsWith("/client")) {
+    if (req.path.startsWith("/v1/client")) {
       res.status(403).json({ message: "Admin privileges required" });
     } else {
       res.redirect("/auth/login");

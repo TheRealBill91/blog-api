@@ -85,21 +85,23 @@ exports.blog_comments = async (req, res, next) => {
     return res.status(200).json([]);
   }
 
-  const updatedComments = await Promise.all(
-    allComments.map(async (comment) => {
-      const commentUpvoteStatus =
-        req.user &&
-        (await CommentUpvote.findOne({
-          user: req.user.id,
-          comment: comment.id,
-        }).exec());
-      const commentUpvoted = !!commentUpvoteStatus;
-      const commentUpvotes = await CommentUpvote.find({ comment: comment.id })
-        .countDocuments()
-        .exec();
-      return { ...comment._doc, upvote: commentUpvotes, liked: commentUpvoted };
-    }),
-  );
+  const commentIds = allComments.map((comment) => comment.id);
+  const userId = req.user ? req.user.id : null;
+  const commentUpvotes = await CommentUpvote.find({
+    user: userId,
+    comment: { $in: commentIds },
+  });
+
+  // id of each comment upvoted by the user
+  const upvotedCommentIds = new Set();
+  commentUpvotes.map((commentUpvote) => {
+    return upvotedCommentIds.add(commentUpvote.comment.toString());
+  });
+
+  const updatedComments = allComments.map((comment) => {
+    const commentUpvoted = upvotedCommentIds.has(comment.id);
+    return { ...comment._doc, liked: commentUpvoted };
+  });
 
   return res.status(200).json(updatedComments);
 };
@@ -121,8 +123,17 @@ exports.comment_upvote = async (req, res) => {
 
     if (upvotedComment) {
       await CommentUpvote.findOneAndDelete({
+        user: req.user.id,
         comment: commentId,
       });
+
+      // update comment upvote count
+      const commentUpvotes = await CommentUpvote.find({ comment: commentId })
+        .countDocuments()
+        .exec();
+      const comment = await Comment.findById(commentId);
+      comment.upvote = commentUpvotes;
+      await comment.save();
 
       return res.status(201).json("Comment upvote removed");
     } else if (!upvotedComment) {
@@ -132,6 +143,15 @@ exports.comment_upvote = async (req, res) => {
         timestamp: Date.now(),
       });
       await commentUpvote.save();
+
+      // update comment upvote count
+      const commentUpvotes = await CommentUpvote.find({ comment: commentId })
+        .countDocuments()
+        .exec();
+      const comment = await Comment.findById(commentId);
+      comment.upvote = commentUpvotes;
+      await comment.save();
+
       return res.status(201).json("comment upvoted successfully");
     }
   } catch (error) {

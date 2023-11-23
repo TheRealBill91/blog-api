@@ -84,6 +84,28 @@ blogContentRouter.get(
   contentController.blog_edit_get,
 );
 
+const blogPostDeletionLimiter = RateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 14, // Limit each IP to 50 requests per window
+  message: "Too many requests from this IP, please try again after an hour",
+  standardHeaders: "draft-7", // draft-6: RateLimit-* headers; draft-7: combined RateLimit header
+  legacyHeaders: false, // X-RateLimit-* headers
+});
+
+blogContentRouter.get(
+  "/post/:postId/deletion",
+  blogPostDeletionLimiter,
+  authorization.adminAuthorization,
+  contentController.blogPost_delete_get,
+);
+
+blogContentRouter.post(
+  "/post/:postId/deletion",
+  blogPostDeletionLimiter,
+  authorization.adminAuthorization,
+  contentController.blogPost_delete_post,
+);
+
 const commentDeletionGetLimiter = RateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
   max: 50, // Limit each IP to 50 requests per window

@@ -17,7 +17,7 @@ require("dotenv").config();
 const passportConfig = require("./middleware/auth/passportConfig");
 
 const adminRouter = require("./routes/admin/adminRouter");
-const clientRouter = require("./routes/client/clientRouter");
+const clientV1Router = require("./routes/client/clientV1Router");
 
 const app = express();
 
@@ -149,7 +149,7 @@ const userSession = session({
 });
 
 app.use((req, res, next) => {
-  if (req.path.startsWith("/client")) {
+  if (req.path.startsWith("/v1/client")) {
     userSession(req, res, next);
   } else {
     adminSession(req, res, next);
@@ -161,7 +161,7 @@ passportConfig.passportInitialization(app);
 app.use(flash());
 
 app.use((req, res, next) => {
-  if (!req.path.startsWith("/client")) {
+  if (!req.path.startsWith("/v1/client")) {
     flashMessageInViews(req, res, next);
     next();
   } else {
@@ -175,7 +175,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", adminRouter);
 
-app.use("/client", clientRouter);
+app.use("/v1/client", clientV1Router);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

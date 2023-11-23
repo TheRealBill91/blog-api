@@ -8,6 +8,7 @@ require("dotenv").config();
 const { body, validationResult } = require("express-validator");
 const expressAsyncHandler = require("express-async-handler");
 const { DateTime } = require("luxon");
+const mongoose = require("mongoose");
 
 // Retrieve blog entries for admin backend
 exports.blog_entries = asyncHandler(async (req, res, next) => {
@@ -81,14 +82,20 @@ exports.blog_edit_get = asyncHandler(async (req, res, next) => {
       .exec(),
   ]);
 
-  const commentUpvotePromises = blogComments.map(async (blogComment) => {
-    const commentUpvotes = await CommentUpvote.find({
-      comment: blogComment.id,
-    }).countDocuments();
-    return commentUpvotes;
+  const blogCommentIds = blogComments.map((blogComment) => blogComment.id);
+
+  const allCommentUpvotes = await CommentUpvote.find({
+    comment: { $in: blogCommentIds },
   });
 
-  const commentUpvotes = await Promise.all(commentUpvotePromises);
+  const commentUpvotes = blogComments.map((blogComment) => {
+    const commentUpvotesFiltered = allCommentUpvotes.filter(
+      (commentUpvote) => commentUpvote.id === blogComment.id,
+    );
+
+    const commentUpvoteCount = commentUpvotesFiltered.length;
+    return commentUpvoteCount;
+  });
 
   if (!blog) {
     const err = new Error(404);
@@ -124,14 +131,20 @@ exports.blog_edit_post = [
       .populate("author")
       .exec();
 
-    const commentUpvotePromises = blogComments.map(async (blogComment) => {
-      const commentUpvotes = await CommentUpvote.find({
-        comment: blogComment.id,
-      }).countDocuments();
-      return commentUpvotes;
+    const blogCommentIds = blogComments.map((blogComment) => blogComment.id);
+
+    const allCommentUpvotes = await CommentUpvote.find({
+      comment: { $in: blogCommentIds },
     });
 
-    const commentUpvotes = await Promise.all(commentUpvotePromises);
+    const commentUpvotes = blogComments.map((blogComment) => {
+      const commentUpvotesFiltered = allCommentUpvotes.filter(
+        (commentUpvote) => commentUpvote.id === blogComment.id,
+      );
+
+      const commentUpvoteCount = commentUpvotesFiltered.length;
+      return commentUpvoteCount;
+    });
 
     const postDate = await Post.findById(req.params.postId, "timestamp");
 
@@ -160,6 +173,37 @@ exports.blog_edit_post = [
     }
   }),
 ];
+
+exports.blogPost_delete_get = asyncHandler(async (req, res, next) => {
+  res.render("delete_page", {
+    pageTitle: "Delete Post",
+  });
+});
+
+exports.blogPost_delete_post = asyncHandler(async (req, res, next) => {
+  const { postId } = req.params;
+
+  const session = await mongoose.startSession();
+
+  try {
+    await session.withTransaction(async () => {
+      const blogComments = await Comment.find({ post: postId });
+      const blogCommentIds = blogComments.map((comment) => {
+        return comment.id;
+      });
+
+      await CommentUpvote.deleteMany({
+        comment: { $in: blogCommentIds },
+      }).session(session);
+      await Comment.deleteMany({ post: postId }).session(session);
+      await Post.findByIdAndDelete(postId).session(session);
+    });
+  } finally {
+    await session.endSession();
+  }
+
+  res.redirect("/");
+});
 
 exports.comment_delete_get = asyncHandler(async (req, res, next) => {
   const { commentId } = req.params;

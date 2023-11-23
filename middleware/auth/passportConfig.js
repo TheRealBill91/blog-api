@@ -105,7 +105,7 @@ passport.use(
 passport.use(
   new GoogleStrategy(
     {
-      callbackURL: "/client/auth/oauth2/redirect/google",
+      callbackURL: "/v1/client/auth/oauth2/redirect/google",
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
       scope: ["profile", "email"],

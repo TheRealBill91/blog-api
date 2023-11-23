@@ -9,7 +9,7 @@ const CommentSchema = new Schema(
     author: { type: Schema.Types.ObjectId, ref: "RegularUser" },
     post: { type: Schema.Types.ObjectId, ref: "Post" },
     timestamp: { type: Date },
-    upvote: { type: Number, default: 0 },
+    upvote: { type: Number },
   },
   opts,
 );

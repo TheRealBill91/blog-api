@@ -4,7 +4,7 @@ require("dotenv").config();
 
 const { body } = require("express-validator");
 
-const CLIENT_LOGIN_FAILURE_URL = `${process.env.CLIENT_LOGIN_URL}/client/auth/login/failure`;
+const CLIENT_LOGIN_FAILURE_URL = `${process.env.CLIENT_LOGIN_URL}/blog/signin`;
 const CLIENT_LOGIN_SUCCESS_URL = `${process.env.CLIENT_LOGIN_URL}/blog/google/loginsuccess`;
 
 // This is for the client login API

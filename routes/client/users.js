@@ -27,4 +27,24 @@ const signupPostLimiter = RateLimit({
 
 usersRouter.post("/signup", signupPostLimiter, usersController.signup_post);
 
+// const passwordResetRequest = RateLimit({
+//   windowMs: 24 * 60 * 60 * 1000, // 24 hour
+//   max: 10, // Limit each IP to 5 requests per window
+//   message: "Too many requests from this IP, please try again after an hour",
+//   standardHeaders: "draft-7", // draft-6: RateLimit-* headers; draft-7: combined RateLimit header
+//   legacyHeaders: false, // X-RateLimit-* headers
+// });
+
+// usersRouter.post(
+//   "/password-reset-request",
+//   passwordResetRequest,
+//   usersController.request_password_reset,
+// );
+
+// usersRouter.get(
+//   "/validate-password-reset-token",
+//   passwordResetRequest,
+//   usersController.validate_password_reset_token,
+// );
+
 module.exports = usersRouter;

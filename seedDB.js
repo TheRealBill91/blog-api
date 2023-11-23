@@ -31,12 +31,12 @@ function generatePassword() {
 
 async function seedDB() {
   // Clear the database
-  await Promise.all([
-    RegularUser.deleteMany({}),
-    Post.deleteMany({}),
-    Comment.deleteMany({}),
-    CommentUpvote.deleteMany({}),
-  ]);
+  // await Promise.all([
+  //   RegularUser.deleteMany({}),
+  //   Post.deleteMany({}),
+  //   Comment.deleteMany({}),
+  //   CommentUpvote.deleteMany({}),
+  // ]);
 
   // Create users
   const users = [];
@@ -56,32 +56,33 @@ async function seedDB() {
   // Create posts
   const posts = await Post.create([
     {
-      title: "First Post",
+      title: "Try again",
       content:
         '<h2>Testing the blog entry</h2><p>Some more <a href="https://www.nvidia.com/en-us/glossary/data-science/large-language-models/" target="_blank" rel="noopener">text</a>.</p>',
       author: users[0]._id,
     },
-    {
-      title: "Second Post",
-      content:
-        '<h2>Testing the blog entry</h2><p>Some more <a href="https://www.nvidia.com/en-us/glossary/data-science/large-language-models/" target="_blank" rel="noopener">text</a>.</p>',
-      author: users[1]._id,
-    },
+    // {
+    //   title: "Second Post",
+    //   content:
+    //     '<h2>Testing the blog entry</h2><p>Some more <a href="https://www.nvidia.com/en-us/glossary/data-science/large-language-models/" target="_blank" rel="noopener">text</a>.</p>',
+    //   author: users[1]._id,
+    // },
   ]);
 
   // Create comments and upvotes
   let userIndex = 2; // Start from the third user for comment upvotes
   for (const post of posts) {
     for (let i = 0; i < 30; i++) {
+      // Create a random number of upvotes for each comment
+      const numUpvotes = Math.floor(Math.random() * 15) + 2; // Random number between 2 and 16
+
       const comment = await Comment.create({
         content: `This is comment ${i + 1} on post ${post.title}`,
         author: users[0]._id, // All comments are created by the first user
         timestamp: DateTime.now().toISO(),
-        post: post._id,
+        post: "6538165a5844cf3f9068537f",
+        upvote: numUpvotes,
       });
-
-      // Create a random number of upvotes for each comment
-      const numUpvotes = Math.floor(Math.random() * 15) + 2; // Random number between 2 and 16
 
       for (let j = 0; j < numUpvotes; j++) {
         await CommentUpvote.create({

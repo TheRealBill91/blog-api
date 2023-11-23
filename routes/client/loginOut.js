@@ -41,11 +41,7 @@ loginOutRouter.get(
   loginOutController.google_login_failure,
 );
 
-loginOutRouter.get(
-  "/login/google",
-  userLoginPostLimiter,
-  loginOutController.google_login,
-);
+loginOutRouter.get("/login/google", loginOutController.google_login);
 
 loginOutRouter.get(
   "/oauth2/redirect/google",
